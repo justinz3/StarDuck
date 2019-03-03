@@ -1,7 +1,7 @@
 // Description: A Ship that can be controlled by a Player
 // Created: 3/2/19
 
-package Ship;
+package Player;
 
 import Physics.*;
 
