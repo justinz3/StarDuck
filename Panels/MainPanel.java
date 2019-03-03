@@ -5,10 +5,14 @@ import java.awt.*;
 
 import Physics.Circle;
 import Physics.Drawable;
+import Physics.Rectangle;
+import Physics.Vector;
 import Player.Ship;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 
 public class MainPanel extends JPanel {
@@ -21,8 +25,9 @@ public class MainPanel extends JPanel {
     private int width, height;
     private int cornerDisplacementX, cornerDisplacementY;
 
-    private JButton playLocal, playLAN;
+    private Rectangle playLocal, playLAN;
     private final int buttonWidth = 195, buttonHeight = 115;
+    private MouseAdapter clickAreaListener;
 
     private final int introDuration = 13750;
 
@@ -56,6 +61,9 @@ public class MainPanel extends JPanel {
         //background.add(playLocal, 0);
         //background.add(playLAN, 0);
         //this.add(background);
+
+        clickAreaListener = new ClickAreaListener();
+        addMouseListener(clickAreaListener);
     }
 
     private void initMenuBackground() {
@@ -69,21 +77,11 @@ public class MainPanel extends JPanel {
     }
 
     private void initMenuButtons() {
-        playLocal = new JButton("Play Local Game");
-        playLocal.setVerticalTextPosition(AbstractButton.CENTER);
-        playLocal.setHorizontalTextPosition(AbstractButton.CENTER);
-        playLocal.setActionCommand("local");
-        playLocal.setBounds(cornerDisplacementX + 20, cornerDisplacementY + 170, buttonWidth, buttonHeight);
-        playLocal.addActionListener(new ButtonListener());
-        //this.add(playLocal);
+        playLocal = new Rectangle(new Vector(cornerDisplacementX + 20 + buttonWidth / 2,
+                cornerDisplacementY + 170 + buttonHeight / 2), buttonWidth, buttonHeight);
 
-        playLAN = new JButton("Play LAN Game");
-        playLAN.setVerticalTextPosition(AbstractButton.CENTER);
-        playLAN.setHorizontalTextPosition(AbstractButton.CENTER);
-        playLAN.setActionCommand("lan");
-        playLAN.setBounds(cornerDisplacementX + 570, cornerDisplacementY + 170, buttonWidth, buttonHeight);
-        playLAN.addActionListener(new ButtonListener());
-        //this.add(playLAN);
+        playLAN = new Rectangle(new Vector(cornerDisplacementX + 570 + buttonWidth / 2,
+                cornerDisplacementY + 170 + buttonHeight / 2), buttonWidth, buttonHeight);
     }
 
     private void initPanelSize(int width, int height) {
@@ -105,18 +103,8 @@ public class MainPanel extends JPanel {
     }
 
     private void clearMenu() {
-        removeButton(playLocal);
-        removeButton(playLAN);
-    }
-
-    private void removeButton(JButton in)
-    {
-        this.remove(in);
-    }
-
-    private void removeComboBox(JComboBox in)
-    {
-        this.remove(in);
+        // clear the menu?
+        removeMouseListener(clickAreaListener);
     }
 
 
@@ -130,6 +118,7 @@ public class MainPanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        System.out.println(location);
 
         switch(location) {
             case MENU:
@@ -141,8 +130,6 @@ public class MainPanel extends JPanel {
                 }
 
                 // Note: Intentional Feature - User can click buttons before they appear
-                playLocal.paint(g);
-                playLAN.paint(g);
                 break;
             case LOCAL:
             case LAN:
@@ -194,19 +181,32 @@ public class MainPanel extends JPanel {
         }
     }
 
-    private class ButtonListener implements ActionListener {
+    private class ClickAreaListener extends MouseAdapter {
 
-        public void actionPerformed(ActionEvent e) {
-            if("local".equals(e.getActionCommand())) {
-                System.out.println("Local");
+        public void mouseClicked(MouseEvent e){
+
+            int x = e.getX();
+            int y = e.getY();
+
+            Vector point = new Vector(x, y);
+            if(playLocal.containsPoint(point)) {
                 location = Location.LOCAL;
                 clearMenu();
             }
-            if("lan".equals(e.getActionCommand())) {
-                System.out.println("LAN");
+            if(playLAN.containsPoint(point)) {
                 location = Location.LAN;
                 clearMenu();
             }
+        }
+
+        public void mousePressed(MouseEvent e)
+        {
+
+        }
+
+        public void mouseReleased(MouseEvent e)
+        {
+
         }
     }
 }

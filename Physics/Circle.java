@@ -79,9 +79,8 @@ public class Circle extends Shape
         return false;
     }
 
-    public boolean isInside(Vector position) {
-        return Math.hypot(getPosition().getX() - position.getX(), getPosition().getY() - position.getY())
-                <= getRadius();
+    public boolean containsPoint(Vector position) {
+        return containsPoint(position.getX(), position.getY());
     }
 
     public int minX()

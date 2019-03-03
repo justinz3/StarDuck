@@ -15,24 +15,22 @@ import java.util.*;
 public class Rectangle extends Shape
 {
     private double width, height;
-    private Color color;
 
     // constructors -----------------------------------------------------------------------------------------------------
     public Rectangle() {
-        this(new Physics.Vector(100, 100), Color.red, 50, 50);
+        this(new Physics.Vector(100, 100), 50, 50);
     }
 
-    public Rectangle(Vector position, Color color, double width, double height)
+    public Rectangle(Vector position, double width, double height)
     {
         super(position);
-        setColor(color);
         setWidth(width);
         setHeight(height);
     }
 
     public Rectangle(Rectangle other)
     {
-        this(other.getPosition(), other.getColor(), other.getWidth(), other.getHeight());
+        this(other.getPosition(), other.getWidth(), other.getHeight());
     }
 
 
@@ -48,35 +46,29 @@ public class Rectangle extends Shape
         return height;
     }
 
-    public Color getColor() {
-        return color;
-    }
-
     public void draw(Graphics g, JPanel panel)
     {
-        Color oldColor = g.getColor();
-        g.setColor(getColor());
         // Translates circle's center to rectangle's origin for drawing.
         g.drawRect((int) (getPosition().getX() - Math.max(-width / 2, width / 2)),
                 (int) (getPosition().getY() - Math.max(-height / 2, height / 2)),
                 (int) Math.abs(width), (int) Math.abs(height));
-        g.setColor(oldColor);
     }
 
     public void fill(Graphics g)
     {
-        Color oldColor = g.getColor();
-        g.setColor(getColor());
         // Translates circle's center to rectangle's origin for drawing.
         g.fillRect((int) (getPosition().getX() - Math.max(-width / 2, width / 2)),
                 (int) (getPosition().getY() - Math.max(-height / 2, height / 2)),
                 (int) Math.abs(width), (int) Math.abs(height));
-        g.setColor(oldColor);
     }
 
     public boolean containsPoint(double x, double y){
 
         return (minX() <= x && x <= maxX()) && (minY() <= y && y <= maxY());
+    }
+
+    public boolean containsPoint(Vector position) {
+        return containsPoint(position.getX(), position.getY());
     }
 
     public boolean isTouching(Shape other)
@@ -88,11 +80,6 @@ public class Rectangle extends Shape
         }
 
         return false;
-    }
-
-    public boolean isInside(Vector position) {
-        return Math.abs(position.getX() - getPosition().getX()) <= width / 2
-                && Math.abs(position.getY() - getPosition().getY()) <= height / 2;
     }
 
     public boolean willTouch(Rectangle other)
@@ -142,10 +129,6 @@ public class Rectangle extends Shape
     public void setHeight(double height)
     {
         this.height = height;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     public void setLeftX(double x) // sets the center

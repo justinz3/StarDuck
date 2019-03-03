@@ -22,7 +22,7 @@ public abstract class Shape implements Drawable {
 
     public abstract void draw(Graphics g, JPanel panel);
 
-    public abstract boolean isInside(Vector position);
+    public abstract boolean containsPoint(Vector position);
 
     // Getters and Setters
     public Vector getPosition() {
