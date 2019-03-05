@@ -4,4 +4,8 @@
 package Player;
 
 public abstract class Projectile {
+
+    private int damage; // healing can be negative damage
+
+
 }

@@ -13,9 +13,10 @@ public class Ship implements Drawable {
     private Hitbox hitbox;
     private Vector position, velocity, acceleration;
     private Image gif;
+    private int health;
 
     public Ship() {
-        this(new Vector(100, 100), new Vector(10, 10), new Vector(0, 0), "gifs/Arwing-Blue.gif");
+        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), "gifs/Arwing-Blue.gif");
     }
 
     public Ship(Vector position, Vector velocity, Vector acceleration, String iconAddress) {
@@ -45,6 +46,10 @@ public class Ship implements Drawable {
 
     public Vector getVelocity() {
         return velocity;
+    }
+
+    public void setVelocity(Vector velocity) {
+        this.velocity = velocity;
     }
 
     public void addVelocity(Vector velocity) {

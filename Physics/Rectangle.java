@@ -79,6 +79,7 @@ public class Rectangle extends Shape
                     ((minY() <= rect.minY() && rect.minY() <= maxY()) || (rect.minY() <= minY() && minY() <= rect.maxY()));
         }
 
+        // TODO do other shapes
         return false;
     }
 

@@ -12,9 +12,9 @@ public class StarDuck {
     public static void main(String[] args) throws IOException {
         JFrame theGUI = new JFrame();
         theGUI.setTitle("StarDuck");
-        theGUI.setSize(1000, 750);
+        theGUI.setSize(900, 500);
         theGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        MainPanel panel = new MainPanel(1000, 750);
+        MainPanel panel = new MainPanel(775, 500);
         Container pane = theGUI.getContentPane();
         pane.setLayout(new GridLayout(1, 1));
         pane.add(panel);

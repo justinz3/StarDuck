@@ -71,6 +71,18 @@ public class Vector {
         return !(x == 0 && y == 0);
     }
 
+    public double abs() {
+        return getMagnitude();
+    }
+
+    public void invertX() {
+        x = -x;
+    }
+
+    public void invertY() {
+        y = -y;
+    }
+
     public static double dot(Vector a, Vector b)
     {
         return a.getX() * b.getX() + a.getY() * b.getY();
