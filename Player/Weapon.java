@@ -6,4 +6,8 @@ package Player;
 public class Weapon {
 
 
+
+    public Weapon(Projectile projectile) {
+
+    }
 }
