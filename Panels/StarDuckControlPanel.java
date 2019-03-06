@@ -32,7 +32,8 @@ public class StarDuckControlPanel extends JPanel {
     }
 
     public void startGame(GameType gameType) {
-        this.gamePanel = new GamePanel(786, 456, gameType, this);
+        this.gamePanel = new GamePanel(1572, 912, gameType, this);
+        parent.setSize(1572, 944);
         this.add(gamePanel, GAME);
         cardLayout.show(this, GAME);
     }
