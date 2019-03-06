@@ -1,36 +1,102 @@
-
+// Represents a control panel for the arcade
 
 package Panels;
+import Panels.JavaArcade;
 
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import java.awt.Component;
+import java.awt.Container;
+import javax.swing.Box;
 import javax.swing.*;
 
-public class ControlPanel extends JPanel implements JavaArcade {
+public class ControlPanel extends JPanel
+    implements ActionListener
+{
+  private JavaArcade game;
+  private GameStats gStats;
+  private JButton startButton, pauseButton, stopButton, instructionsButton, creditsButton;
+  
+  // Constructor
+  public ControlPanel(JavaArcade t, GameStats g)
+  {
+    game = t;
+    gStats = g;
+  
+    instructionsButton = new JButton("Instructions");
+    instructionsButton.addActionListener(this);
+    add(instructionsButton);
+    add(Box.createHorizontalStrut(80)); 
+    startButton = new JButton("Start");
+    startButton.addActionListener(this);
+   
+    add(startButton);
+    
+    pauseButton = new JButton("Pause");
+    pauseButton.addActionListener(this);
+    add(pauseButton);
+     stopButton = new JButton("Stop");
+    stopButton.addActionListener(this);
+    add(stopButton);
+    add(Box.createHorizontalStrut(80)); 
+    creditsButton = new JButton("Credits");
+    creditsButton.addActionListener(this);
+    add(creditsButton);
+    
+  
+  }
 
-    public boolean running() {
-        return false;
-    }
-    public void startGame() {
+  // Called when the start button is clicked
+  public void actionPerformed(ActionEvent e)
+  {
+  	 
+    JButton button = (JButton)e.getSource();
 
-    }
-    public String getGameName() {
-        return "StarDuck";
-    }
-    public void pauseGame() {
+    if (button == startButton)
+    {
 
+    	if (!game.running()) 
+      {
+       
+       ((JPanel)(game)).requestFocus(); //need to provide the JPanel focus
+       game.startGame();
+			 gStats.update(0);
+    	 gStats.repaint();       
+      }
     }
-    public String getInstructions() {
-        return "INSTRUCTIONS";
+    else if(button == pauseButton)
+    {
+    	game.pauseGame();
+    	startButton.setText("Resume");
+    	 startButton.setEnabled(true);
+    	repaint();
+    
     }
-    public String getCredits() {
-        return "CREDITS Dan and Justin";
+    else if(button == stopButton)
+    {
+    	game.stopGame();
+    	gStats.gameOver(game.getPoints());
+    	gStats.repaint();
+    	startButton.setEnabled(true);
+    	startButton.setText("Restart");
+    	repaint();
+    }  
+     else if(button == creditsButton)
+    {
+    	String credits = game.getCredits();
+    	JOptionPane.showMessageDialog(this, credits, "Game Credits", JOptionPane.PLAIN_MESSAGE);
+    
+    }      
+       else if(button == instructionsButton)
+    {
+    	String instructions = game.getInstructions();
+    	JOptionPane.showMessageDialog(this, instructions, "Game Rules", JOptionPane.PLAIN_MESSAGE);
+    
     }
-    public String getHighScore() {
-        return "High Score: 0";
-    }
-    public void stopGame() {
+    ((JPanel)(game)).requestFocus();      
+  }
+    
+  }
 
-    }
-    public int getPoints() {
-        return 0;
-    }
-}
