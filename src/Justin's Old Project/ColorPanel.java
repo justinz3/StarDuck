@@ -6,6 +6,8 @@
  * Created: 6-18-18
  */
 
+import Physics.Circle;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
