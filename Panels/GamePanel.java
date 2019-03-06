@@ -33,12 +33,25 @@ public class GamePanel extends JPanel {
     private javax.swing.Timer timer;
     private int delay = 5;
     private StarDuckControlPanel.GameType gameType;
+    private StarDuckControlPanel controlPanel;
+    private KeyboardListener keyListener;
 
-    public GamePanel(int width, int height, StarDuckControlPanel.GameType gameType) {
+    public GamePanel(int width, int height, StarDuckControlPanel.GameType gameType, StarDuckControlPanel controlPanel) {
         this.setFocusable(true);
         this.requestFocus();
+        this.controlPanel = controlPanel;
+
+        // Panel focusing code taken from: https://bit.ly/2EHLuHs
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                GamePanel.this.requestFocusInWindow();
+            }
+        });
 
         this.gameType = gameType;
+        this.backgroundImage = getImage("gifs/stars-scrolling.gif");
+        ;
 
         initPanelSize(width, height);
 
@@ -46,7 +59,8 @@ public class GamePanel extends JPanel {
 
         initTimer();
 
-        addKeyListener(new KeyboardListener());
+        this.keyListener = new KeyboardListener();
+        addKeyListener(keyListener);
 
         objects = new ArrayList<Drawable>();
         objects.add(new Player(new Ship(), KeyInputSet.WASD, true));
@@ -70,14 +84,6 @@ public class GamePanel extends JPanel {
         return new ImageIcon(fileAddress).getImage();
     }
 
-    private void clearMenu() {
-        // clear the menu?
-        removeMouseListener(clickAreaListener);
-
-        playIntro = false;
-    }
-
-
     // ---------------------------------------------------------
 
 
@@ -86,24 +92,9 @@ public class GamePanel extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        //System.out.println(location);
-
-//        switch(location) {
-//            case LOCAL:
-//            case LAN:
-//                // Drawing should be the same for both LOCAL and LAN
-//                backgroundImage = getImage("gifs/stars-scrolling.gif");
-//                break;
-//        }
+        setBackground(Color.BLACK);
 
         g.drawImage(backgroundImage, cornerDisplacementX, cornerDisplacementY, this);
-
-        g.setColor(Color.blue);
-        //g.fillRect(cornerDisplacementX + 20, cornerDisplacementY + 170, 195, 115);
-        //g.fillRect(cornerDisplacementX + 570, cornerDisplacementY + 170, 195, 115);
-        // TODO draw all ships
-
 
         /*setBackground(Color.BLUE);
         deleteMe.draw(g);
@@ -114,22 +105,13 @@ public class GamePanel extends JPanel {
                 deleteMe.getAcceleration().getX(), deleteMe.getAcceleration().getY());*/
 
 
-        //deleteMeToo.draw(g, this);
-//        switch(location) {
-//            case MENU:
-//                break;
-//            case LOCAL:
-//            case LAN:
-//                // Drawing should be the same for both LOCAL and LAN
-//                for(Drawable object : objects) {
-//                    object.draw(g, this);
-//                    if(object instanceof Player) {
-//                        Player player = (Player) object;
-//                        //System.out.printf("%s %s\n", player.getShip().getPosition(), player.getShip().getVelocity());
-//                    }
-//                }
-//                break;
-//        }
+        for (Drawable object : objects) {
+            object.draw(g, this);
+            if (object instanceof Player) {
+                Player player = (Player) object;
+                //System.out.printf("%s %s\n", player.getShip().getPosition(), player.getShip().getVelocity());
+            }
+        }
     }
 
 
@@ -155,17 +137,22 @@ public class GamePanel extends JPanel {
         }
     }
 
+    public void endGame() {
+        removeKeyListener(keyListener);
+        controlPanel.showMenu();
+    }
+
     public class KeyboardListener implements KeyListener {
 
         public KeyboardListener() {
             super();
-            System.out.println("Created listener");
         }
 
         @Override
         public void keyPressed(KeyEvent e) {
-            //System.out.println(e);
-            //System.out.println(e.getKeyCode());
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                endGame();
+
             for (int i = 0; i < objects.size(); i++) {
                 if (objects.get(i) instanceof Player) {
                     Player player = (Player) objects.get(i);

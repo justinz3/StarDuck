@@ -97,6 +97,9 @@ public class MainMenuPanel extends JPanel {
     public void clearMouse() {
         removeMouseListener(clickAreaListener);
     }
+    public void reactivate() {
+        addMouseListener(clickAreaListener);
+    }
 
 
     // ---------------------------------------------------------

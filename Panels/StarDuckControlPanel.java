@@ -26,10 +26,14 @@ public class StarDuckControlPanel extends JPanel {
 
     public void showMenu() {
         cardLayout.show(this, MENU);
+        cardLayout.removeLayoutComponent(gamePanel);
+        parent.setSize(786, 488);
+        mainMenuPanel.reactivate();
     }
 
     public void startGame(GameType gameType) {
-        this.gamePanel = new GamePanel(786, 456);
+        this.gamePanel = new GamePanel(786, 456, gameType, this);
         this.add(gamePanel, GAME);
+        cardLayout.show(this, GAME);
     }
 }
