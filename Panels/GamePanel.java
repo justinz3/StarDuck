@@ -7,7 +7,6 @@ import Physics.*;
 import Player.*;
 
 import java.awt.event.*;
-import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.util.*;
@@ -50,7 +49,7 @@ public class GamePanel extends JPanel {
         });
 
         this.gameType = gameType;
-        this.backgroundImage = getImage("gifs/stars-scrolling-large.gif");
+        this.backgroundImage = getImage("graphics/stars-scrolling-large.gif");
         ;
 
         initPanelSize(width, height);

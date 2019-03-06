@@ -17,7 +17,7 @@ public class Ship implements Drawable {
     private Weapon weapon;
 
     public Ship() {
-        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), /*new Weapon(),*/ "gifs/Arwing-Blue.gif");
+        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), /*new Weapon(),*/ "graphics/Arwing-Blue.gif");
     }
 
     public Ship(Vector position, Vector velocity, Vector acceleration, /*Weapon weapon,*/ String iconAddress) {

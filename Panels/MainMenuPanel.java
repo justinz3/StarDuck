@@ -85,9 +85,9 @@ public class MainMenuPanel extends JPanel {
         setBackground(Color.BLACK);
 
         if (time < introDuration && playIntro) {
-            backgroundImage = getImage("gifs/main-menu-intro.gif");
+            backgroundImage = getImage("graphics/main-menu-intro.gif");
         } else {
-            backgroundImage = getImage("gifs/main-menu-loop.gif");
+            backgroundImage = getImage("graphics/main-menu-loop.gif");
             playIntro = false;
         }
 
