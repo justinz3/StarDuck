@@ -12,7 +12,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.util.*;
 
-public class MainPanel extends JPanel {
+public class GamePanel extends JPanel {
 
     private ArrayList<Drawable> objects;
 
@@ -32,23 +32,17 @@ public class MainPanel extends JPanel {
     private int time;
     private javax.swing.Timer timer;
     private int delay = 5;
+    private StarDuckControlPanel.GameType gameType;
 
-    private enum Location {
-        MENU,
-
-        LOCAL,
-
-        LAN;
-    }
-    private Location location = Location.MENU;
-
-    public MainPanel(int width, int height) {
+    public GamePanel(int width, int height, StarDuckControlPanel.GameType gameType) {
         this.setFocusable(true);
         this.requestFocus();
 
+        this.gameType = gameType;
+
         initPanelSize(width, height);
 
-        initMenu();
+        //initMenu();
 
         initTimer();
 
@@ -56,37 +50,6 @@ public class MainPanel extends JPanel {
 
         objects = new ArrayList<Drawable>();
         objects.add(new Player(new Ship(), KeyInputSet.WASD, true));
-    }
-
-    private void initMenu() {
-
-        initMenuBackground();
-
-        initMenuButtons();
-
-        //background.add(playLocal, 0);
-        //background.add(playLAN, 0);
-        //this.add(background);
-
-        clickAreaListener = new ClickAreaListener();
-        addMouseListener(clickAreaListener);
-    }
-
-    private void initMenuBackground() {
-
-        backgroundWidth = 786;
-        backgroundHeight = 456;
-
-        cornerDisplacementX = (width - backgroundWidth) / 2;
-        cornerDisplacementY = (height - backgroundHeight) / 2;
-    }
-
-    private void initMenuButtons() {
-        playLocal = new Physics.Rectangle(new Physics.Vector(cornerDisplacementX + 20 + buttonWidth / 2,
-                cornerDisplacementY + 170 + buttonHeight / 2), buttonWidth, buttonHeight);
-
-        playLAN = new Physics.Rectangle(new Physics.Vector(cornerDisplacementX + 570 + buttonWidth / 2,
-                cornerDisplacementY + 170 + buttonHeight / 2), buttonWidth, buttonHeight);
     }
 
     private void initPanelSize(int width, int height) {
@@ -118,32 +81,21 @@ public class MainPanel extends JPanel {
     // ---------------------------------------------------------
 
 
-
-
     private Circle deleteMe = new Circle();
     private Ship deleteMeToo = new Ship();
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         //System.out.println(location);
 
-        switch(location) {
-            case MENU:
-                if(time < introDuration && playIntro) {
-                    backgroundImage = getImage("gifs/main-menu-intro.gif");
-                }
-                else {
-                    backgroundImage = getImage("gifs/main-menu-loop.gif");
-                }
-
-                // Note: Intentional Feature - User can click buttons before they appear
-                break;
-            case LOCAL:
-            case LAN:
-                // Drawing should be the same for both LOCAL and LAN
-                backgroundImage = getImage("gifs/stars-scrolling.gif");
-                break;
-        }
+//        switch(location) {
+//            case LOCAL:
+//            case LAN:
+//                // Drawing should be the same for both LOCAL and LAN
+//                backgroundImage = getImage("gifs/stars-scrolling.gif");
+//                break;
+//        }
 
         g.drawImage(backgroundImage, cornerDisplacementX, cornerDisplacementY, this);
 
@@ -162,31 +114,26 @@ public class MainPanel extends JPanel {
                 deleteMe.getAcceleration().getX(), deleteMe.getAcceleration().getY());*/
 
 
-
         //deleteMeToo.draw(g, this);
-        switch(location) {
-            case MENU:
-                break;
-            case LOCAL:
-            case LAN:
-                // Drawing should be the same for both LOCAL and LAN
-                for(Drawable object : objects) {
-                    object.draw(g, this);
-                    if(object instanceof Player) {
-                        Player player = (Player) object;
-                        //System.out.printf("%s %s\n", player.getShip().getPosition(), player.getShip().getVelocity());
-                    }
-                }
-                break;
-        }
+//        switch(location) {
+//            case MENU:
+//                break;
+//            case LOCAL:
+//            case LAN:
+//                // Drawing should be the same for both LOCAL and LAN
+//                for(Drawable object : objects) {
+//                    object.draw(g, this);
+//                    if(object instanceof Player) {
+//                        Player player = (Player) object;
+//                        //System.out.printf("%s %s\n", player.getShip().getPosition(), player.getShip().getVelocity());
+//                    }
+//                }
+//                break;
+//        }
     }
 
 
-
-
     // ---------------------------------------------------------
-
-
 
 
     private class TimerListener implements ActionListener {
@@ -199,47 +146,12 @@ public class MainPanel extends JPanel {
 
         public void actionPerformed(ActionEvent e) {
             time += delay;
-            if(location != Location.MENU) {
-                for(Drawable object : objects) {
-                    if(object instanceof Player) {
-                        Player player = (Player) object;
-                        player.move();
-                    }
+            for (Drawable object : objects) {
+                if (object instanceof Player) {
+                    Player player = (Player) object;
+                    player.move();
                 }
             }
-        }
-    }
-
-    private class ClickAreaListener extends MouseAdapter {
-
-        public void mouseClicked(MouseEvent e){
-
-            int x = e.getX();
-            int y = e.getY();
-
-            Physics.Vector point = new Physics.Vector(x, y);
-
-            if(time < introDuration && playIntro) {
-                return;
-            }
-            if(playLocal.containsPoint(point)) {
-                location = Location.LOCAL;
-                clearMenu();
-            }
-            if(playLAN.containsPoint(point)) {
-                location = Location.LAN;
-                clearMenu();
-            }
-        }
-
-        public void mousePressed(MouseEvent e)
-        {
-
-        }
-
-        public void mouseReleased(MouseEvent e)
-        {
-
         }
     }
 
@@ -254,23 +166,23 @@ public class MainPanel extends JPanel {
         public void keyPressed(KeyEvent e) {
             //System.out.println(e);
             //System.out.println(e.getKeyCode());
-            for(int i = 0; i < objects.size(); i++) {
-                if(objects.get(i) instanceof Player) {
+            for (int i = 0; i < objects.size(); i++) {
+                if (objects.get(i) instanceof Player) {
                     Player player = (Player) objects.get(i);
-                    if(e.getKeyCode() == player.input.getForward()) {
+                    if (e.getKeyCode() == player.input.getForward()) {
                         player.moveForward();
                     }
-                    if(e.getKeyCode() == player.input.getBackward()) {
+                    if (e.getKeyCode() == player.input.getBackward()) {
                         player.moveBackward();
                     }
-                    if(e.getKeyCode() == player.input.getLeft()) {
-                        if(player.isStrafing())
+                    if (e.getKeyCode() == player.input.getLeft()) {
+                        if (player.isStrafing())
                             player.strafeLeft();
                         else
                             player.turnLeft();
                     }
-                    if(e.getKeyCode() == player.input.getRight()) {
-                        if(player.isStrafing())
+                    if (e.getKeyCode() == player.input.getRight()) {
+                        if (player.isStrafing())
                             player.strafeRight();
                         else
                             player.turnRight();
@@ -289,22 +201,22 @@ public class MainPanel extends JPanel {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            for(int i = 0; i < objects.size(); i++) {
-                if(objects.get(i) instanceof Player) {
+            for (int i = 0; i < objects.size(); i++) {
+                if (objects.get(i) instanceof Player) {
                     Player player = (Player) objects.get(i);
-                    if(e.getKeyCode() == player.input.getForward()) {
+                    if (e.getKeyCode() == player.input.getForward()) {
                         player.stopForward();
                     }
-                    if(e.getKeyCode() == player.input.getBackward()) {
+                    if (e.getKeyCode() == player.input.getBackward()) {
                         player.stopBackward();
                     }
-                    if(e.getKeyCode() == player.input.getLeft()) {
-                        if(player.isStrafing())
+                    if (e.getKeyCode() == player.input.getLeft()) {
+                        if (player.isStrafing())
                             player.stopLeft();
                         // turning stops on its own
                     }
-                    if(e.getKeyCode() == player.input.getRight()) {
-                        if(player.isStrafing())
+                    if (e.getKeyCode() == player.input.getRight()) {
+                        if (player.isStrafing())
                             player.stopRight();
                         // turning stops on its own
                     }
