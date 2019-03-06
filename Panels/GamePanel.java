@@ -108,6 +108,7 @@ public class GamePanel extends JPanel {
             object.draw(g, this);
             if (object instanceof Player) {
                 Player player = (Player) object;
+                //player.draw(g);
                 //System.out.printf("%s %s\n", player.getShip().getPosition(), player.getShip().getVelocity());
             }
         }
