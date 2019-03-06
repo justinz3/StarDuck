@@ -1,5 +1,6 @@
 package Panels;
 
+import javax.naming.ldap.Control;
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,6 +11,7 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     private MainMenuPanel mainMenuPanel;
     private GamePanel gamePanel;
     private CardLayout cardLayout;
+    private ControlPanel controlPanel;
 
     public enum GameType {
         LOCAL,
@@ -37,14 +39,27 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
         parent.setSize(786, 488);
         mainMenuPanel.reactivate();
         currentlyVisible = PanelType.MENU;
+        controlPanel.resetPauseButton();
+        controlPanel.enableInstructionButton();
+        controlPanel.enableStartButton();
+        controlPanel.disablePauseButton();
+        controlPanel.disableStopButton();
+        controlPanel.enableCreditsButton();
     }
 
     public void startGame(GameType gameType) {
-        this.gamePanel = new GamePanel(1572, 912, gameType, this);
-        parent.setSize(1572, 944);
+//        this.gamePanel = new GamePanel(1572, 912, gameType, this);
+//        parent.setSize(1572, 944);
+        this.gamePanel = new GamePanel(786, 456, gameType, this);
+        parent.setSize(786, 488);
         this.add(gamePanel, GAME);
         cardLayout.show(this, GAME);
         currentlyVisible = PanelType.GAME;
+        controlPanel.disableStartButton();
+        controlPanel.disableCreditsButton();
+        controlPanel.disableInstructionsButton();
+        controlPanel.enablePauseButton();
+        controlPanel.enableStopButton();
     }
 
     public boolean running() {
@@ -78,7 +93,7 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     }
 
     public String getHighScore() {
-        return "High Score: 0";
+        return "0";
     }
 
     public void stopGame() {
@@ -88,5 +103,9 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
 
     public int getPoints() {
         return 0;
+    }
+
+    public void linkControlPanel(ControlPanel c) {
+        this.controlPanel = c;
     }
 }

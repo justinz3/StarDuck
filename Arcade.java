@@ -16,6 +16,7 @@ public class Arcade extends JFrame {
 
 
         ControlPanel controls = new ControlPanel(game, display); //Also passing in JavaArcade to ControlPanel, I know you will respond to buttons
+        ((StarDuckControlPanel) game).linkControlPanel(controls);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());

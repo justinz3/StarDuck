@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import Physics.*;
+import Physics.Vector;
 import Player.*;
 
 import java.awt.event.*;
@@ -41,13 +42,7 @@ public class GamePanel extends JPanel {
         this.requestFocus();
         this.controlPanel = controlPanel;
 
-        // Panel focusing code taken from: https://bit.ly/2EHLuHs
-        this.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentShown(ComponentEvent e) {
-                GamePanel.this.requestFocusInWindow();
-            }
-        });
+        getFocus();
 
         this.gameType = gameType;
         this.backgroundImage = getImage("graphics/stars-scrolling-large.gif");
@@ -96,8 +91,7 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
         setBackground(Color.BLACK);
 
-        if (running) {
-            g.drawImage(backgroundImage, cornerDisplacementX, cornerDisplacementY, this);
+        g.drawImage(backgroundImage, cornerDisplacementX, cornerDisplacementY, this);
 
         /*setBackground(Color.BLUE);
         deleteMe.draw(g);
@@ -108,13 +102,12 @@ public class GamePanel extends JPanel {
                 deleteMe.getAcceleration().getX(), deleteMe.getAcceleration().getY());*/
 
 
-            for (Drawable object : objects) {
-                object.draw(g, this);
-                if (object instanceof Player) {
-                    Player player = (Player) object;
-                    //player.draw(g);
-                    //System.out.printf("%s %s\n", player.getShip().getPosition(), player.getShip().getVelocity());
-                }
+        for (Drawable object : objects) {
+            object.draw(g, this);
+            if (object instanceof Player) {
+                Player player = (Player) object;
+                //player.draw(g);
+                //System.out.printf("%s %s\n", player.getShip().getPosition(), player.getShip().getVelocity());
             }
         }
     }
@@ -132,11 +125,13 @@ public class GamePanel extends JPanel {
         }
 
         public void actionPerformed(ActionEvent e) {
-            time += delay;
-            for (Drawable object : objects) {
-                if (object instanceof Player) {
-                    Player player = (Player) object;
-                    player.move();
+            if (running) {
+                time += delay;
+                for (Drawable object : objects) {
+                    if (object instanceof Player) {
+                        Player player = (Player) object;
+                        player.move();
+                    }
                 }
             }
         }
@@ -226,7 +221,32 @@ public class GamePanel extends JPanel {
         return running;
     }
 
+    public void getFocus() {
+        // Panel focusing code taken from: https://bit.ly/2EHLuHs
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                GamePanel.this.requestFocusInWindow();
+            }
+        });
+    }
+
     public void togglePause() {
         running = !running;
+        removeKeyListener(keyListener);
+        if (running) {
+            getFocus();
+            addKeyListener(keyListener);
+        }
+        stopAllPlayers(); // Fixes bug where holding a key then pausing and resuming makes the ship move in one direction indefinitely
+    }
+
+    private void stopAllPlayers() {
+        for (int i = 0; i < objects.size(); i++) {
+            if (objects.get(i) instanceof Player) {
+                Player player = (Player) objects.get(i);
+                player.setVelocity(new Vector(0, 0));
+            }
+        }
     }
 }

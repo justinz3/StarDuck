@@ -59,17 +59,13 @@ public class ControlPanel extends JPanel implements ActionListener {
             }
         } else if (button == pauseButton) {
             game.pauseGame();
-            startButton.setText("Resume");
-            startButton.setEnabled(true);
+            pauseButton.setText(game.running() ? "Pause" : "Resume");
             repaint();
-
         } else if (button == stopButton) {
             if (game.running()) {
                 game.stopGame();
                 gStats.gameOver(game.getPoints());
                 gStats.repaint();
-                startButton.setEnabled(true);
-                startButton.setText("Restart");
                 repaint();
             }
         } else if (button == creditsButton) {
@@ -82,6 +78,58 @@ public class ControlPanel extends JPanel implements ActionListener {
 
         }
         ((JPanel) (game)).requestFocus();
+    }
+
+    private void enable(JButton button) {
+        button.setEnabled(true);
+    }
+
+    private void disable(JButton button) {
+        button.setEnabled(false);
+    }
+
+    public void enableStartButton() {
+        enable(startButton);
+    }
+
+    public void disableStartButton() {
+        disable(startButton);
+    }
+
+    public void enablePauseButton() {
+        enable(pauseButton);
+    }
+
+    public void disablePauseButton() {
+        disable(pauseButton);
+    }
+
+    public void resetPauseButton() {
+        pauseButton.setText("Pause");
+    }
+
+    public void enableStopButton() {
+        enable(stopButton);
+    }
+
+    public void disableStopButton() {
+        disable(stopButton);
+    }
+
+    public void enableInstructionButton() {
+        enable(instructionsButton);
+    }
+
+    public void disableInstructionsButton() {
+        disable(instructionsButton);
+    }
+
+    public void enableCreditsButton() {
+        enable(creditsButton);
+    }
+
+    public void disableCreditsButton() {
+        disable(creditsButton);
     }
 }
 
