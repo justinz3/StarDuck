@@ -42,7 +42,7 @@ public interface JavaArcade {
   /* This method should stop the timers, reset the score, and set a running boolean value to false */
   public void stopGame();
   
-  /* This method shoud return the current players number of points */
+  /* This method should return the current players number of points */
   
   public int getPoints(); //add to spec
     

@@ -34,6 +34,7 @@ public class GamePanel extends JPanel {
     private StarDuckControlPanel.GameType gameType;
     private StarDuckControlPanel controlPanel;
     private KeyboardListener keyListener;
+    private boolean running;
 
     public GamePanel(int width, int height, StarDuckControlPanel.GameType gameType, StarDuckControlPanel controlPanel) {
         this.setFocusable(true);
@@ -63,6 +64,8 @@ public class GamePanel extends JPanel {
 
         objects = new ArrayList<Drawable>();
         objects.add(new Player(new Ship(), KeyInputSet.WASD, true));
+
+        running = true;
     }
 
     private void initPanelSize(int width, int height) {
@@ -93,7 +96,8 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
         setBackground(Color.BLACK);
 
-        g.drawImage(backgroundImage, cornerDisplacementX, cornerDisplacementY, this);
+        if (running) {
+            g.drawImage(backgroundImage, cornerDisplacementX, cornerDisplacementY, this);
 
         /*setBackground(Color.BLUE);
         deleteMe.draw(g);
@@ -104,12 +108,13 @@ public class GamePanel extends JPanel {
                 deleteMe.getAcceleration().getX(), deleteMe.getAcceleration().getY());*/
 
 
-        for (Drawable object : objects) {
-            object.draw(g, this);
-            if (object instanceof Player) {
-                Player player = (Player) object;
-                //player.draw(g);
-                //System.out.printf("%s %s\n", player.getShip().getPosition(), player.getShip().getVelocity());
+            for (Drawable object : objects) {
+                object.draw(g, this);
+                if (object instanceof Player) {
+                    Player player = (Player) object;
+                    //player.draw(g);
+                    //System.out.printf("%s %s\n", player.getShip().getPosition(), player.getShip().getVelocity());
+                }
             }
         }
     }
@@ -140,6 +145,7 @@ public class GamePanel extends JPanel {
     public void endGame() {
         removeKeyListener(keyListener);
         controlPanel.showMenu();
+        running = false;
     }
 
     public class KeyboardListener implements KeyListener {
@@ -153,29 +159,31 @@ public class GamePanel extends JPanel {
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
                 endGame();
 
-            for (int i = 0; i < objects.size(); i++) {
-                if (objects.get(i) instanceof Player) {
-                    Player player = (Player) objects.get(i);
-                    if (e.getKeyCode() == player.input.getForward()) {
-                        player.moveForward();
-                    }
-                    if (e.getKeyCode() == player.input.getBackward()) {
-                        player.moveBackward();
-                    }
-                    if (e.getKeyCode() == player.input.getLeft()) {
-                        if (player.isStrafing())
-                            player.strafeLeft();
-                        else
-                            player.turnLeft();
-                    }
-                    if (e.getKeyCode() == player.input.getRight()) {
-                        if (player.isStrafing())
-                            player.strafeRight();
-                        else
-                            player.turnRight();
-                    }
+            if (running) {
+                for (int i = 0; i < objects.size(); i++) {
+                    if (objects.get(i) instanceof Player) {
+                        Player player = (Player) objects.get(i);
+                        if (e.getKeyCode() == player.input.getForward()) {
+                            player.moveForward();
+                        }
+                        if (e.getKeyCode() == player.input.getBackward()) {
+                            player.moveBackward();
+                        }
+                        if (e.getKeyCode() == player.input.getLeft()) {
+                            if (player.isStrafing())
+                                player.strafeLeft();
+                            else
+                                player.turnLeft();
+                        }
+                        if (e.getKeyCode() == player.input.getRight()) {
+                            if (player.isStrafing())
+                                player.strafeRight();
+                            else
+                                player.turnRight();
+                        }
 
-                    //System.out.println(player.getRotation());
+                        //System.out.println(player.getRotation());
+                    }
                 }
             }
         }
@@ -212,5 +220,13 @@ public class GamePanel extends JPanel {
                 }
             }
         }
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void togglePause() {
+        running = !running;
     }
 }
