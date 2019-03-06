@@ -6,6 +6,7 @@ import java.awt.*;
 import Physics.*;
 import Physics.Vector;
 import Player.*;
+import Weapon.Projectile;
 
 import java.awt.event.*;
 import java.awt.event.KeyListener;
@@ -35,6 +36,7 @@ public class GamePanel extends JPanel {
     private StarDuckControlPanel.GameType gameType;
     private StarDuckControlPanel controlPanel;
     private KeyboardListener keyListener;
+    private MouseListener mouseListener;
     private boolean running;
 
     public GamePanel(int width, int height, StarDuckControlPanel.GameType gameType, StarDuckControlPanel controlPanel) {
@@ -57,6 +59,9 @@ public class GamePanel extends JPanel {
         this.keyListener = new KeyboardListener();
         addKeyListener(keyListener);
 
+        this.mouseListener = new ClickListener();
+        addMouseListener(mouseListener);
+
         objects = new ArrayList<Drawable>();
         objects.add(new Player(new Ship(), KeyInputSet.WASD, true));
 
@@ -77,7 +82,7 @@ public class GamePanel extends JPanel {
         timer.start();
     }
 
-    private static Image getImage(String fileAddress) {
+    public static Image getImage(String fileAddress) {
         return new ImageIcon(fileAddress).getImage();
     }
 
@@ -103,10 +108,13 @@ public class GamePanel extends JPanel {
 
 
         for (Drawable object : objects) {
+            if(object == null) {
+                //System.out.println(object.getClass());
+                System.out.println("NULL!");
+            }
             object.draw(g, this);
             if (object instanceof Player) {
                 Player player = (Player) object;
-                //player.draw(g);
                 //System.out.printf("%s %s\n", player.getShip().getPosition(), player.getShip().getVelocity());
             }
         }
@@ -128,10 +136,11 @@ public class GamePanel extends JPanel {
             if (running) {
                 time += delay;
                 for (Drawable object : objects) {
-                    if (object instanceof Player) {
-                        Player player = (Player) object;
-                        player.move();
-                    }
+                    object.move();
+//                    if (object instanceof Player) {
+//                        Player player = (Player) object;
+//                        player.move();
+//                    }
                 }
             }
         }
@@ -214,6 +223,41 @@ public class GamePanel extends JPanel {
                     //System.out.println(player.getRotation());
                 }
             }
+        }
+    }
+
+    private class ClickListener implements MouseListener {
+
+        public void mouseClicked(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+
+            int n = objects.size();
+            for(int i = 0; i < n; i++) {
+                Drawable object = objects.get(i);
+                if(object instanceof Player) {
+                    Player player = (Player) object;
+                    Projectile proj = player.getShip().getWeapon().fire(new Vector(player.getShip().getPosition()), new Vector(x, y));
+                    objects.add(proj);
+                    System.out.println("FIRE");
+                }
+            }
+        }
+
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        public void mouseExited(MouseEvent e) {
+
         }
     }
 

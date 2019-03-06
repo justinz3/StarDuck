@@ -4,6 +4,7 @@
 package Player;
 
 import Physics.*;
+import Weapon.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,14 +18,15 @@ public class Ship implements Drawable {
     private Weapon weapon;
 
     public Ship() {
-        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), /*new Weapon(),*/ "graphics/Arwing-Blue.gif");
+        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0),
+                new Weapon(new Laser(new Vector(), new Vector())), "graphics/Arwing-Blue.gif");
     }
 
-    public Ship(Vector position, Vector velocity, Vector acceleration, /*Weapon weapon,*/ String iconAddress) {
+    public Ship(Vector position, Vector velocity, Vector acceleration, Weapon weapon, String iconAddress) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
-        /*this.weapon = weapon;*/
+        this.weapon = weapon;
         gif = new ImageIcon(iconAddress).getImage();
     }
 
@@ -35,6 +37,10 @@ public class Ship implements Drawable {
     public void move() {
         position.add(velocity);
         velocity.add(acceleration);
+    }
+
+    public void takeDamage(int damage) {
+        health -= damage;
     }
 
     // Getters and Setters
@@ -64,6 +70,10 @@ public class Ship implements Drawable {
 
     public void addAcceleration(Vector acceleration) {
         this.acceleration.add(acceleration);
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
     }
 
 }
