@@ -1,8 +1,7 @@
 // Description: Run this to Run StarDuck
 // Created: 3/2/19
 
-import Panels.JavaArcade;
-import Panels.MainPanel;
+import Panels.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +14,9 @@ public class StarDuck implements JavaArcade {
         theGUI.setTitle("StarDuck");
         theGUI.setSize(900, 500);
         theGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        MainPanel panel = new MainPanel(775, 500);
+        StarDuckControlPanel controlPanel = new StarDuckControlPanel(theGUI);
         Container pane = theGUI.getContentPane();
-        pane.setLayout(new GridLayout(1, 1));
-        pane.add(panel);
+        pane.add(controlPanel);
         theGUI.setVisible(true);
     }
 
