@@ -39,7 +39,7 @@ public abstract class Projectile implements Drawable {
 
     public abstract void onImpact(Drawable other); // what the projectile does when it hits something
 
-    public abstract void draw(Graphics g, JPanel panel);
+    public abstract void draw(Graphics g);
 
     public void move() {
         position.add(velocity);

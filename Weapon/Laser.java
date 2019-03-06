@@ -1,6 +1,6 @@
 package Weapon;
 
-import Panels.GamePanel;
+import Helpers.Helpers;
 import Physics.Drawable;
 import Physics.Vector;
 import Player.Ship;
@@ -10,7 +10,7 @@ import java.awt.*;
 
 public class Laser extends Projectile implements Drawable {
 
-    private static final Image laserGraphics = GamePanel.getImage("graphics/laser.png");
+    private static final Image laserGraphics = Helpers.getImage("graphics/laser.png");
 
     public Laser(Vector currentPosition, Vector targetPosition) {
         super(currentPosition, targetPosition, 1, 1,-1, -1, 2);
@@ -23,8 +23,8 @@ public class Laser extends Projectile implements Drawable {
         }
     }
 
-    public void draw(Graphics g, JPanel panel) {
+    public void draw(Graphics g) {
         //System.out.println(getPosition());
-        g.drawImage(laserGraphics, (int) getPosition().getX(), (int) getPosition().getY(), panel);
+        g.drawImage(laserGraphics, (int) getPosition().getX(), (int) getPosition().getY(), null);
     }
 }

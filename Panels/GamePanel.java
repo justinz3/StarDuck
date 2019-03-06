@@ -6,7 +6,8 @@ import java.awt.*;
 import Physics.*;
 import Physics.Vector;
 import Player.*;
-import Weapon.Projectile;
+import Weapon.*;
+import Helpers.*;
 
 import java.awt.event.*;
 import java.awt.event.KeyListener;
@@ -47,7 +48,7 @@ public class GamePanel extends JPanel {
         getFocus();
 
         this.gameType = gameType;
-        this.backgroundImage = getImage("graphics/stars-scrolling-large.gif");
+        this.backgroundImage = Helpers.getImage("graphics/stars-scrolling-large.gif");
         ;
 
         initPanelSize(width, height);
@@ -63,7 +64,7 @@ public class GamePanel extends JPanel {
         addMouseListener(mouseListener);
 
         objects = new ArrayList<Drawable>();
-        objects.add(new Player(new Ship(), KeyInputSet.WASD, true));
+        objects.add(new Player(new Ship(), KeyInputSet.WASD, false));
 
         running = true;
     }
@@ -80,10 +81,6 @@ public class GamePanel extends JPanel {
         time = 0;
         timer = new javax.swing.Timer(delay, new TimerListener(delay));
         timer.start();
-    }
-
-    public static Image getImage(String fileAddress) {
-        return new ImageIcon(fileAddress).getImage();
     }
 
     // ---------------------------------------------------------
@@ -112,7 +109,7 @@ public class GamePanel extends JPanel {
                 //System.out.println(object.getClass());
                 System.out.println("NULL!");
             }
-            object.draw(g, this);
+            object.draw(g);
             if (object instanceof Player) {
                 Player player = (Player) object;
                 //System.out.printf("%s %s\n", player.getShip().getPosition(), player.getShip().getVelocity());
@@ -239,7 +236,6 @@ public class GamePanel extends JPanel {
                     Player player = (Player) object;
                     Projectile proj = player.getShip().getWeapon().fire(new Vector(player.getShip().getPosition()), new Vector(x, y));
                     objects.add(proj);
-                    System.out.println("FIRE");
                 }
             }
         }
