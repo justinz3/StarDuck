@@ -46,7 +46,6 @@ public class GamePanel extends JPanel {
 
         this.gameType = gameType;
         this.backgroundImage = getImage("graphics/stars-scrolling-large.gif");
-        ;
 
         initPanelSize(width, height);
 
