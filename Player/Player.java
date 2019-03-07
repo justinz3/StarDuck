@@ -11,9 +11,6 @@ public class Player implements Drawable {
     private Ship ship;
     private int score;
     public final KeyInputSet input;
-    public static final int MOVEMENT_SPEED = 2;
-    public static final int TURNING_SPEED = 4;
-    private int rotation;
     private Vector velocity;
     private boolean strafing;
 
@@ -35,39 +32,39 @@ public class Player implements Drawable {
     }
 
     private void turn(int degCW) {
-        rotation += degCW;
+        ship.turn(degCW);
     }
 
     public void turnLeft() {
-        turn(-Player.TURNING_SPEED);
+        turn(-Ship.TURNING_SPEED);
     }
 
     public void turnRight() {
-        turn(Player.TURNING_SPEED);
+        turn(Ship.TURNING_SPEED);
     }
 
     public int getRotation() {
-        return rotation;
+        return ship.getRotation();
     }
 
     public void moveForward() {
-        if(velocity.getY() < MOVEMENT_SPEED)
-            velocity.add(new Vector(0, MOVEMENT_SPEED));
+        if(velocity.getY() < Ship.MOVEMENT_SPEED)
+            velocity.add(new Vector(0, Ship.MOVEMENT_SPEED));
     }
 
     public void moveBackward() {
-        if(velocity.getY() > -MOVEMENT_SPEED)
-            velocity.add(new Vector(0, -MOVEMENT_SPEED));
+        if(velocity.getY() > -Ship.MOVEMENT_SPEED)
+            velocity.add(new Vector(0, -Ship.MOVEMENT_SPEED));
     }
 
     public void strafeRight() {
-        if(velocity.getX() < MOVEMENT_SPEED)
-            velocity.add(new Vector(MOVEMENT_SPEED, 0));
+        if(velocity.getX() < Ship.MOVEMENT_SPEED)
+            velocity.add(new Vector(Ship.MOVEMENT_SPEED, 0));
     }
 
     public void strafeLeft() {
-        if(velocity.getX() > -MOVEMENT_SPEED)
-            velocity.add(new Vector(-MOVEMENT_SPEED, 0));
+        if(velocity.getX() > -Ship.MOVEMENT_SPEED)
+            velocity.add(new Vector(-Ship.MOVEMENT_SPEED, 0));
     }
 
     public boolean isStrafing() {
@@ -91,15 +88,11 @@ public class Player implements Drawable {
     }
 
     private static Vector getForwardMovement(double speed, int rotation) {
-        return new Vector(speed * Math.cos(toRadians(rotation)), speed * Math.sin(toRadians(rotation)));
+        return new Vector(speed * Math.cos(Math.toRadians(rotation)), speed * Math.sin(Math.toRadians(rotation)));
     }
 
     private static Vector getBackwardMovement(int speed, int rotation) {
         return Player.getForwardMovement(speed, rotation + 180);
-    }
-
-    public static double toRadians(int degrees) {
-        return (double) degrees / 180 * Math.PI;
     }
 
     // TODO remove this after debugging is complete
@@ -114,7 +107,7 @@ public class Player implements Drawable {
             copy = new Vector(velocity);
         }
         else {
-            copy = getForwardMovement(velocity.getY(), rotation);
+            copy = getForwardMovement(velocity.getY(), ship.getRotation());
         }
 
         //System.out.println("Before: " + ship.getVelocity());
@@ -125,8 +118,8 @@ public class Player implements Drawable {
         ship.move();
     }
 
-    public void draw(Graphics g, JPanel panel) {
-        ship.draw(g, panel);
+    public void draw(Graphics g) {
+        ship.draw(g);
         // TODO draw more things
     }
 }

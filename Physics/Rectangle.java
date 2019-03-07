@@ -46,7 +46,7 @@ public class Rectangle extends Shape
         return height;
     }
 
-    public void draw(Graphics g, JPanel panel)
+    public void draw(Graphics g)
     {
         // Translates circle's center to rectangle's origin for drawing.
         g.drawRect((int) (getPosition().getX() - Math.max(-width / 2, width / 2)),

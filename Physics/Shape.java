@@ -20,9 +20,13 @@ public abstract class Shape implements Drawable {
 
     public abstract boolean isTouching(Shape other);
 
-    public abstract void draw(Graphics g, JPanel panel);
+    public abstract void draw(Graphics g);
 
     public abstract boolean containsPoint(Vector position);
+
+    public void move() {
+        // do nothing, shapes don't move? or we can apply a velocity, so that the hitbox rectangles will have the same as the ships
+    }
 
     // Getters and Setters
     public Vector getPosition() {

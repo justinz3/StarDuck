@@ -44,7 +44,7 @@ public class Circle extends Shape
         return radius;
     }
 
-    public void draw(Graphics g, JPanel panel)
+    public void draw(Graphics g)
     {
         Color oldColor = g.getColor();
         g.setColor(getColor());

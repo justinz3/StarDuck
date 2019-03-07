@@ -20,18 +20,23 @@ public class Ship implements Drawable {
     private BufferedImage bufferedImage;
     private int health;
     private Weapon weapon;
-    private Dimension screenSize;
+    private int rotation;
+    private final int initalRotation = 90; // ship starts off facing up
+
+    public static final int MOVEMENT_SPEED = 2;
+    public static final int TURNING_SPEED = 4;
 
     public Ship() {
-        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), /*new Weapon(),*/ "graphics/Arwing-Blue.gif", new Dimension(1572, 912));
+        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0),
+                new Weapon(new Laser(new Vector(), new Vector())), "graphics/Arwing-Blue.gif");
     }
 
-    public Ship(Vector position, Vector velocity, Vector acceleration, /*Weapon weapon,*/ String iconAddress, Dimension screenSize) {
+    public Ship(Vector position, Vector velocity, Vector acceleration, Weapon weapon, String iconAddress) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
-        this.screenSize = screenSize;
-        /*this.weapon = weapon;*/
+        this.weapon = weapon;
+        rotation = initalRotation;
         gif = new ImageIcon(iconAddress).getImage();
         try {
             this.bufferedImage = ImageIO.read(new File(iconAddress));
@@ -41,21 +46,32 @@ public class Ship implements Drawable {
         }
     }
 
-    public void draw(Graphics g, JPanel panel) {
-        g.drawImage(gif, (int) position.getX(), (int) position.getY(), panel);
+    public void draw(Graphics g) {
+        g.drawImage(Helpers.rotateImage(gif, Math.toRadians(-rotation + initalRotation)), (int) position.getX(), (int) position.getY(), null);
     }
 
     public void move() {
         Vector tempPosition = new Vector(position);
         tempPosition.add(velocity);
 
-        System.out.println(screenSize);
         if (tempPosition.getX() >= 0 && tempPosition.getX() <= screenSize.width - bufferedImage.getWidth())
             position.add(new Vector(velocity.getX(), 0));
         if (tempPosition.getY() >= 0 && tempPosition.getY() <= screenSize.height - bufferedImage.getHeight())
             position.add(new Vector(0, velocity.getY()));
 
         velocity.add(acceleration);
+    }
+
+    public void takeDamage(int damage) {
+        health -= damage;
+    }
+
+    public void turn(int degCCW) {
+        rotation -= degCCW;
+    }
+
+    public int getRotation() {
+        return rotation;
     }
 
     // Getters and Setters
@@ -85,6 +101,10 @@ public class Ship implements Drawable {
 
     public void addAcceleration(Vector acceleration) {
         this.acceleration.add(acceleration);
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
     }
 
 }

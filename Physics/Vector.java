@@ -93,6 +93,11 @@ public class Vector {
         return new Vector(a.getX() * scalar, a.getY() * scalar);
     }
 
+    public double getAngle() {
+        // returns angle in radians
+        return Math.atan2(y, x);
+    }
+
 
     // mutators -----------------------------------------------------------------------------------------------------
 
