@@ -3,18 +3,17 @@ package Player;
 import Physics.Drawable;
 import Physics.Vector;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class Player implements Drawable {
 
     private Ship ship;
     private int score;
-    public final KeyInputSet input;
+    public final KeyMovementSet input;
     private Vector velocity;
     private boolean strafing;
 
-    public Player(Ship ship, KeyInputSet input, boolean strafing) {
+    public Player(Ship ship, KeyMovementSet input, boolean strafing) {
         this.ship = ship;
         score = 0;
         this.input = input;

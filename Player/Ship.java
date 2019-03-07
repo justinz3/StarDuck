@@ -65,6 +65,7 @@ public class Ship implements Drawable {
             e.printStackTrace();
             System.exit(-1);
         }
+        this.screenSize = screensize;
     }
 
     public void draw(Graphics g) {

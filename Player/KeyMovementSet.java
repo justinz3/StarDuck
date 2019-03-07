@@ -5,14 +5,14 @@ package Player;
 
 import java.awt.event.KeyEvent;
 
-public enum KeyInputSet {
+public enum KeyMovementSet {
 
     WASD (KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D);
 
 
     private int forward, left, backward, right;
     private int primaryShoot, secondaryShoot; // TODO allow shooting
-    KeyInputSet(int forward, int left, int backward, int right) {
+    KeyMovementSet(int forward, int left, int backward, int right) {
 
         this.forward = forward;
         this.left = left;

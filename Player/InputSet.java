@@ -3,5 +3,18 @@
 
 package Player;
 
-public class InputSet {
+import java.awt.*;
+import java.awt.event.MouseEvent;
+
+public enum InputSet {
+
+    WASD_MOUSE(KeyMovementSet.WASD, (MouseEvent) MouseEvent.BUTTON1);
+
+    private KeyMovementSet movement;
+    private Event fire;
+
+    InputSet(KeyMovementSet movement, Event fire) {
+        this.movement = movement;
+        this.fire = fire;
+    }
 }

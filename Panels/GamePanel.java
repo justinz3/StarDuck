@@ -63,7 +63,7 @@ public class GamePanel extends JPanel {
         addMouseListener(mouseListener);
 
         objects = new ArrayList<Drawable>();
-        objects.add(new Player(new Ship(), KeyInputSet.WASD, true));
+        objects.add(new Player(new Ship(this.getSize()), KeyMovementSet.WASD, true));
 
         running = true;
     }
@@ -84,23 +84,11 @@ public class GamePanel extends JPanel {
 
     // ---------------------------------------------------------
 
-
-    private Circle deleteMe = new Circle();
-    private Ship deleteMeToo = new Ship();
-
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         setBackground(Color.BLACK);
 
         g.drawImage(backgroundImage, cornerDisplacementX, cornerDisplacementY, this);
-
-        /*setBackground(Color.BLUE);
-        deleteMe.draw(g);
-        deleteMe.move();
-        System.out.printf("Pos: <%.2f, %.2f>\nVel: <%.2f, %.2f>\nAcc: <%.2f, %.2f>\n",
-                deleteMe.getPosition().getX(), deleteMe.getPosition().getY(),
-                deleteMe.getVelocity().getX(), deleteMe.getVelocity().getY(),
-                deleteMe.getAcceleration().getX(), deleteMe.getAcceleration().getY());*/
 
 
         for (Drawable object : objects) {
@@ -129,10 +117,6 @@ public class GamePanel extends JPanel {
                 time += delay;
                 for (Drawable object : objects) {
                     object.move();
-//                    if (object instanceof Player) {
-//                        Player player = (Player) object;
-//                        player.move();
-//                    }
                 }
             }
         }

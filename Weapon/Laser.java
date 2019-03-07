@@ -10,10 +10,14 @@ import java.awt.*;
 
 public class Laser extends Projectile implements Drawable {
 
-    private static final Image laserGraphics = Helpers.getImage("graphics/laser.png");
+    private Image laserGraphics = Helpers.getImage("graphics/laser.png");
 
     public Laser(Vector currentPosition, Vector targetPosition) {
         super(currentPosition, targetPosition, 1, 1,-1, -1, 2);
+        Vector displacement = new Vector(targetPosition);
+        displacement.add(Vector.scalarMult(currentPosition,-1));
+        double angle = Math.atan2(displacement.getY(), displacement.getX());
+        laserGraphics = Helpers.rotateImage(laserGraphics, angle);
     }
 
     public void onImpact(Drawable other) {
