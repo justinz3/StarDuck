@@ -63,7 +63,7 @@ public class GamePanel extends JPanel {
         addMouseListener(mouseListener);
 
         objects = new ArrayList<Drawable>();
-        objects.add(new Player(new Ship(this.getSize()), KeyMovementSet.WASD, false));
+        objects.add(new Player(new Ship(this.getSize()), KeyInputSet.WASD, false));
 
         running = true;
     }
@@ -145,7 +145,8 @@ public class GamePanel extends JPanel {
                         Player player = (Player) objects.get(i);
                         if (e.getKeyCode() == player.input.getForward()) {
                             player.moveForward();
-                        } else if (e.getKeyCode() == player.input.getBackward()) {
+                        }
+                        if (e.getKeyCode() == player.input.getBackward()) {
                             player.moveBackward();
                         }
                         if (e.getKeyCode() == player.input.getLeft()) {
@@ -153,7 +154,8 @@ public class GamePanel extends JPanel {
                                 player.strafeLeft();
                             else
                                 player.turnLeft();
-                        } else if (e.getKeyCode() == player.input.getRight()) {
+                        }
+                        if (e.getKeyCode() == player.input.getRight()) {
                             if (player.isStrafing())
                                 player.strafeRight();
                             else

@@ -3,24 +3,23 @@
 
 package Player;
 
-import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public enum InputSet {
 
-    WASD_MOUSE(KeyMovementSet.WASD, MouseEvent.BUTTON1);
+    WASD_MOUSE(KeyInputSet.WASD, MouseEvent.BUTTON1);
 
-    private KeyMovementSet movement;
+    private KeyInputSet movement;
     private int fireKey;
     private boolean useMouse;
 
-    InputSet(KeyMovementSet movement, int fire, boolean useMouse) {
+    InputSet(KeyInputSet movement, int fire, boolean useMouse) {
         this.movement = movement;
         this.fireKey = fire;
         this.useMouse = useMouse;
     }
 
-    InputSet(KeyMovementSet movement, int fire) {
+    InputSet(KeyInputSet movement, int fire) {
         this(movement, fire, true);
     }
 }

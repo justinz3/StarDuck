@@ -9,11 +9,11 @@ public class Player implements Drawable {
 
     private Ship ship;
     private int score;
-    public final KeyMovementSet input;
+    public final KeyInputSet input;
     private Vector velocity;
     private boolean strafing;
 
-    public Player(Ship ship, KeyMovementSet input, boolean strafing) {
+    public Player(Ship ship, KeyInputSet input, boolean strafing) {
         this.ship = ship;
         score = 0;
         this.input = input;

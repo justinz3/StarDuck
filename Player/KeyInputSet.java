@@ -5,19 +5,23 @@ package Player;
 
 import java.awt.event.KeyEvent;
 
-public enum KeyMovementSet {
+public enum KeyInputSet {
 
-    WASD (KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D);
+    WASD (KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, true);
 
 
     private int forward, left, backward, right;
     private int primaryShoot, secondaryShoot; // TODO allow shooting
-    KeyMovementSet(int forward, int left, int backward, int right) {
+    private boolean useMouse;
+
+    KeyInputSet(int forward, int left, int backward, int right, boolean useMouse) {
 
         this.forward = forward;
         this.left = left;
         this.backward = backward;
         this.right = right;
+
+        this.useMouse = useMouse;
     }
 
     public int getForward() {
