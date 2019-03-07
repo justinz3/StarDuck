@@ -29,23 +29,38 @@ public class Ship implements Drawable {
     public static final int MOVEMENT_SPEED = 2;
     public static final int TURNING_SPEED = 4;
 
+    public static enum ShipType {
+        RED("graphics/Arwing-Red.gif"),
+        GREEN("graphics/Arwing-Green.gif"),
+        BLUE("graphics/Arwing-Blue.gif");
+
+        private String iconAddress;
+        ShipType(String iconAddress) {
+            this.iconAddress = iconAddress;
+        }
+    }
+
     public Ship() {
-        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Weapon(new Laser(new Vector(), new Vector())), "graphics/Arwing-Blue.gif", new Dimension(1572, 912));
+        this(new Dimension(1572, 912));
     }
 
     public Ship(Dimension screenSize) {
-        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Weapon(new Laser(new Vector(), new Vector())), "graphics/Arwing-Blue.gif", screenSize);
+        this(ShipType.BLUE, screenSize);
     }
 
-    public Ship(Vector position, Vector velocity, Vector acceleration, Weapon weapon, String iconAddress, Dimension screensize) {
+    public Ship (ShipType shipType, Dimension screenSize) {
+        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Weapon(new Laser(new Vector(), new Vector())), shipType, screenSize);
+    }
+
+    public Ship(Vector position, Vector velocity, Vector acceleration, Weapon weapon, ShipType shipType, Dimension screensize) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
         this.weapon = weapon;
         rotation = initalRotation;
-        gif = new ImageIcon(iconAddress).getImage();
+        gif = new ImageIcon(shipType.iconAddress).getImage();
         try {
-            this.bufferedImage = ImageIO.read(new File(iconAddress));
+            this.bufferedImage = ImageIO.read(new File(shipType.iconAddress));
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);
