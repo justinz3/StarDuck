@@ -37,6 +37,8 @@ public class GamePanel extends JPanel {
     private StarDuckControlPanel.GameType gameType;
     private StarDuckControlPanel controlPanel;
     private KeyboardListener keyListener;
+    private HashMap<Integer, Boolean> isPressed;
+
     private MouseListener mouseListener;
     private boolean running;
 
@@ -66,6 +68,8 @@ public class GamePanel extends JPanel {
         objects.add(new Player(new Ship(this.getSize()), KeyInputSet.WASD, false));
 
         running = true;
+
+        isPressed = new HashMap<>();
     }
 
     private void initPanelSize(int width, int height) {
@@ -90,7 +94,6 @@ public class GamePanel extends JPanel {
 
         g.drawImage(backgroundImage, cornerDisplacementX, cornerDisplacementY, this);
 
-
         for (Drawable object : objects) {
             object.draw(g);
             if (object instanceof Player) {
@@ -113,7 +116,47 @@ public class GamePanel extends JPanel {
         }
 
         public void actionPerformed(ActionEvent e) {
-            if (running) {
+            if (isRunning()) {
+                for (int i = 0; i < objects.size(); i++) {
+                    if (objects.get(i) instanceof Player) {
+                        Player player = (Player) objects.get(i);
+                        if (isPressed.containsKey(player.input.getForward())
+                                && isPressed.get(player.input.getForward())) {
+                            player.moveForward();
+                        }
+                        else {
+                            player.stopForward();
+                        }
+                        if (isPressed.containsKey(player.input.getBackward())
+                                && isPressed.get(player.input.getBackward())) {
+                            player.moveBackward();
+                        }
+                        else {
+                            player.stopBackward();
+                        }
+                        if (isPressed.containsKey(player.input.getLeft())
+                                && isPressed.get(player.input.getLeft())) {
+                            if (player.isStrafing())
+                                player.strafeLeft();
+                            else
+                                player.turnLeft();
+                        }
+                        if (isPressed.containsKey(player.input.getRight())
+                                && isPressed.get(player.input.getRight())) {
+                            if (player.isStrafing())
+                                player.strafeRight();
+                            else
+                                player.turnRight();
+                        }
+
+                        if (isPressed.containsKey(player.input.getPrimaryShoot())
+                                && isPressed.get(player.input.getPrimaryShoot())) {
+                            Projectile proj = player.getShip().fire();
+                            objects.add(proj);
+                        }
+                    }
+                }
+
                 time += delay;
                 for (Drawable object : objects) {
                     object.move();
@@ -140,36 +183,7 @@ public class GamePanel extends JPanel {
                 endGame();
 
             if (running) {
-                for (int i = 0; i < objects.size(); i++) {
-                    if (objects.get(i) instanceof Player) {
-                        Player player = (Player) objects.get(i);
-                        if (e.getKeyCode() == player.input.getForward()) {
-                            player.moveForward();
-                        }
-                        if (e.getKeyCode() == player.input.getBackward()) {
-                            player.moveBackward();
-                        }
-                        if (e.getKeyCode() == player.input.getLeft()) {
-                            if (player.isStrafing())
-                                player.strafeLeft();
-                            else
-                                player.turnLeft();
-                        }
-                        if (e.getKeyCode() == player.input.getRight()) {
-                            if (player.isStrafing())
-                                player.strafeRight();
-                            else
-                                player.turnRight();
-                        }
-
-                        if (e.getKeyCode() == player.input.getPrimaryShoot()) {
-                            Projectile proj = player.getShip().fire();
-                            objects.add(proj);
-                        }
-
-                        //System.out.println(player.getRotation());
-                    }
-                }
+                isPressed.put(e.getKeyCode(), true);
             }
         }
 
@@ -181,29 +195,7 @@ public class GamePanel extends JPanel {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            for (int i = 0; i < objects.size(); i++) {
-                if (objects.get(i) instanceof Player) {
-                    Player player = (Player) objects.get(i);
-                    if (e.getKeyCode() == player.input.getForward()) {
-                        player.stopForward();
-                    }
-                    if (e.getKeyCode() == player.input.getBackward()) {
-                        player.stopBackward();
-                    }
-                    if (e.getKeyCode() == player.input.getLeft()) {
-                        if (player.isStrafing())
-                            player.stopLeft();
-                        // turning stops on its own
-                    }
-                    if (e.getKeyCode() == player.input.getRight()) {
-                        if (player.isStrafing())
-                            player.stopRight();
-                        // turning stops on its own
-                    }
-
-                    //System.out.println(player.getRotation());
-                }
-            }
+            isPressed.put(e.getKeyCode(), false);
         }
     }
 

@@ -23,7 +23,6 @@ public class Weapon {
     public Projectile fire(Vector position, double radians) {
         Vector target = new Vector(position);
         target.add(new Vector(projectile.getSpeed(), Vector.unitVector(radians)));
-        System.out.println(position + " " + target);
         return fire(position, target);
     }
 }

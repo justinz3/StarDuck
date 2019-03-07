@@ -108,10 +108,7 @@ public class Player implements Drawable {
         else {
             copy = getForwardMovement(velocity.getY(), ship.getRotation());
         }
-
-        //System.out.println("Before: " + ship.getVelocity());
-        //.getVelocity().invertY(); // because y-axis is inverted because arrays (so negative direction is up)
-        //System.out.println("After: " + ship.getVelocity());
+        ;
         copy.invertY();
         ship.setVelocity(copy);
         ship.move();

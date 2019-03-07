@@ -30,7 +30,7 @@ public class Ship implements Drawable {
     private ShipType shipType;
 
     public static final int MOVEMENT_SPEED = 2;
-    public static final int TURNING_SPEED = 4;
+    public static final int TURNING_SPEED = 1;
 
     public static enum ShipType {
         RED("graphics/Arwing-Red.gif", new Rectangle(new Vector(97, 120), 20, 40), new Rectangle(new Vector(132, 140), 90, 20)),
@@ -103,6 +103,8 @@ public class Ship implements Drawable {
             relativePosition.add(new Vector(-1 * bufferedImage.getWidth() / 2.0, -1 * bufferedImage.getHeight() / 2.0)); // Move position to be relative to the top left corner of the Ship
             shipType.hitbox.get(index).setPosition(relativePosition);
         }
+
+        velocity = new Vector(0, 0);
     }
 
     public Projectile fire() {
