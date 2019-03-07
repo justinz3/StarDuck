@@ -15,9 +15,15 @@ public class Weapon {
 
     public Projectile fire(Vector position, Vector target) {
         if(projectile instanceof Laser) {
-            System.out.printf("Position: %s, Target %s\n", position, target);
-            return new Laser(position, target);
+            return new Laser(new Vector(position), new Vector(target));
         }
         return null; //TODO
+    }
+
+    public Projectile fire(Vector position, double radians) {
+        Vector target = new Vector(position);
+        target.add(new Vector(projectile.getSpeed(), Vector.unitVector(radians)));
+        System.out.println(position + " " + target);
+        return fire(position, target);
     }
 }

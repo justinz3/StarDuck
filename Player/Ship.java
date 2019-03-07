@@ -8,7 +8,6 @@ import Physics.Rectangle;
 import Physics.Shape;
 import Weapon.*;
 import Helpers.*;
-import org.w3c.dom.css.Rect;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -19,6 +18,7 @@ import java.io.IOException;
 
 public class Ship implements Drawable {
 
+    private Hitbox hitbox;
     private Vector position, velocity, acceleration;
     private Image gif;
     private BufferedImage bufferedImage;
@@ -59,7 +59,7 @@ public class Ship implements Drawable {
         this(ShipType.BLUE, screenSize);
     }
 
-    public Ship(ShipType shipType, Dimension screenSize) {
+    public Ship (ShipType shipType, Dimension screenSize) {
         this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Weapon(new Laser(new Vector(), new Vector())), shipType, screenSize);
     }
 
@@ -83,9 +83,6 @@ public class Ship implements Drawable {
 
     public void draw(Graphics g) {
         g.drawImage(Helpers.rotateImage(gif, Math.toRadians(-rotation + initalRotation)), (int) position.getX(), (int) position.getY(), null);
-        g.setColor(Color.BLUE);
-        for (Shape s : shipType.hitbox)
-            s.draw(g);
     }
 
     public void move() {
@@ -106,6 +103,10 @@ public class Ship implements Drawable {
             relativePosition.add(new Vector(-1 * bufferedImage.getWidth() / 2.0, -1 * bufferedImage.getHeight() / 2.0)); // Move position to be relative to the top left corner of the Ship
             shipType.hitbox.get(index).setPosition(relativePosition);
         }
+    }
+
+    public Projectile fire() {
+        return weapon.fire(new Vector(position.getX() + bufferedImage.getWidth() / 2, position.getY() + bufferedImage.getHeight() / 2), Math.toRadians(-rotation));
     }
 
     public void takeDamage(int damage) {
@@ -149,8 +150,8 @@ public class Ship implements Drawable {
         this.acceleration.add(acceleration);
     }
 
-    public Weapon getWeapon() {
-        return weapon;
-    }
+//    public Weapon getWeapon() {
+//        return weapon;
+//    }
 
 }

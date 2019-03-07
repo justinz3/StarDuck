@@ -28,6 +28,10 @@ public class Vector {
         setY(y);
     }
 
+    public Vector(double magnitude, Vector direction) {
+        this(scalarMult(unitVector(direction.getAngle()), magnitude));
+    }
+
     public Vector(Vector other)
     {
         this(other.getX(), other.getY());
@@ -96,6 +100,10 @@ public class Vector {
     public double getAngle() {
         // returns angle in radians
         return Math.atan2(y, x);
+    }
+
+    public static Vector unitVector(double radians) {
+        return new Vector(Math.cos(radians), Math.sin(radians));
     }
 
 

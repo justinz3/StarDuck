@@ -63,7 +63,7 @@ public class GamePanel extends JPanel {
         addMouseListener(mouseListener);
 
         objects = new ArrayList<Drawable>();
-        objects.add(new Player(new Ship(this.getSize()), KeyMovementSet.WASD, true));
+        objects.add(new Player(new Ship(this.getSize()), KeyMovementSet.WASD, false));
 
         running = true;
     }
@@ -213,7 +213,7 @@ public class GamePanel extends JPanel {
                 Drawable object = objects.get(i);
                 if(object instanceof Player) {
                     Player player = (Player) object;
-                    Projectile proj = player.getShip().getWeapon().fire(new Vector(player.getShip().getPosition()), new Vector(x, y));
+                    Projectile proj = player.getShip().fire();
                     objects.add(proj);
                 }
             }

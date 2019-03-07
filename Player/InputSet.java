@@ -8,13 +8,19 @@ import java.awt.event.MouseEvent;
 
 public enum InputSet {
 
-    WASD_MOUSE(KeyMovementSet.WASD, (MouseEvent) MouseEvent.BUTTON1);
+    WASD_MOUSE(KeyMovementSet.WASD, MouseEvent.BUTTON1);
 
     private KeyMovementSet movement;
-    private Event fire;
+    private int fireKey;
+    private boolean useMouse;
 
-    InputSet(KeyMovementSet movement, Event fire) {
+    InputSet(KeyMovementSet movement, int fire, boolean useMouse) {
         this.movement = movement;
-        this.fire = fire;
+        this.fireKey = fire;
+        this.useMouse = useMouse;
+    }
+
+    InputSet(KeyMovementSet movement, int fire) {
+        this(movement, fire, true);
     }
 }
