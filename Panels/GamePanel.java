@@ -48,8 +48,7 @@ public class GamePanel extends JPanel {
         getFocus();
 
         this.gameType = gameType;
-        this.backgroundImage = Helpers.getImage("graphics/stars-scrolling-large.gif");
-        ;
+        this.backgroundImage = getImage("graphics/stars-scrolling-large.gif");
 
         initPanelSize(width, height);
 
@@ -64,7 +63,7 @@ public class GamePanel extends JPanel {
         addMouseListener(mouseListener);
 
         objects = new ArrayList<Drawable>();
-        objects.add(new Player(new Ship(), KeyInputSet.WASD, false));
+        objects.add(new Player(new Ship(), KeyInputSet.WASD, true));
 
         running = true;
     }
@@ -105,10 +104,6 @@ public class GamePanel extends JPanel {
 
 
         for (Drawable object : objects) {
-            if(object == null) {
-                //System.out.println(object.getClass());
-                System.out.println("NULL!");
-            }
             object.draw(g);
             if (object instanceof Player) {
                 Player player = (Player) object;

@@ -42,7 +42,14 @@ public class Ship implements Drawable {
     }
 
     public void move() {
-        position.add(velocity);
+        Vector tempPosition = new Vector(position);
+        tempPosition.add(velocity);
+
+        System.out.println(tempPosition);
+
+        if(tempPosition.getX() + 186 * 0.275 >= 0 && tempPosition.getY() >= 0)
+            position.add(velocity);
+
         velocity.add(acceleration);
     }
 

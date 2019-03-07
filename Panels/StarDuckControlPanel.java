@@ -48,10 +48,10 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     }
 
     public void startGame(GameType gameType) {
-//        this.gamePanel = new GamePanel(1572, 912, gameType, this);
-//        parent.setSize(1572, 944);
-        this.gamePanel = new GamePanel(786, 456, gameType, this);
-        parent.setSize(786, 488);
+        this.gamePanel = new GamePanel(1572, 912, gameType, this);
+        parent.setSize(1572, 944);
+//        this.gamePanel = new GamePanel(786, 456, gameType, this);
+//        parent.setSize(786, 488);
         this.add(gamePanel, GAME);
         cardLayout.show(this, GAME);
         currentlyVisible = PanelType.GAME;
