@@ -145,8 +145,7 @@ public class GamePanel extends JPanel {
                         Player player = (Player) objects.get(i);
                         if (e.getKeyCode() == player.input.getForward()) {
                             player.moveForward();
-                        }
-                        if (e.getKeyCode() == player.input.getBackward()) {
+                        } else if (e.getKeyCode() == player.input.getBackward()) {
                             player.moveBackward();
                         }
                         if (e.getKeyCode() == player.input.getLeft()) {
@@ -154,12 +153,16 @@ public class GamePanel extends JPanel {
                                 player.strafeLeft();
                             else
                                 player.turnLeft();
-                        }
-                        if (e.getKeyCode() == player.input.getRight()) {
+                        } else if (e.getKeyCode() == player.input.getRight()) {
                             if (player.isStrafing())
                                 player.strafeRight();
                             else
                                 player.turnRight();
+                        }
+
+                        if (e.getKeyCode() == player.input.getPrimaryShoot()) {
+                            Projectile proj = player.getShip().fire();
+                            objects.add(proj);
                         }
 
                         //System.out.println(player.getRotation());
@@ -205,16 +208,18 @@ public class GamePanel extends JPanel {
     private class ClickListener implements MouseListener {
 
         public void mouseClicked(MouseEvent e) {
-            int x = e.getX();
-            int y = e.getY();
+            if (gameType == StarDuckControlPanel.GameType.LAN) {
+                int x = e.getX();
+                int y = e.getY();
 
-            int n = objects.size();
-            for(int i = 0; i < n; i++) {
-                Drawable object = objects.get(i);
-                if(object instanceof Player) {
-                    Player player = (Player) object;
-                    Projectile proj = player.getShip().fire();
-                    objects.add(proj);
+                int n = objects.size();
+                for (int i = 0; i < n; i++) {
+                    Drawable object = objects.get(i);
+                    if (object instanceof Player) {
+                        Player player = (Player) object;
+                        Projectile proj = player.getShip().fire();
+                        objects.add(proj);
+                    }
                 }
             }
         }
