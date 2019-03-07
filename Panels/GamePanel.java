@@ -48,7 +48,7 @@ public class GamePanel extends JPanel {
         getFocus();
 
         this.gameType = gameType;
-        this.backgroundImage = getImage("graphics/stars-scrolling-large.gif");
+        this.backgroundImage = Helpers.getImage("graphics/stars-scrolling-large.gif");
 
         initPanelSize(width, height);
 

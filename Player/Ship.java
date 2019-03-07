@@ -4,6 +4,8 @@
 package Player;
 
 import Physics.*;
+import Weapon.*;
+import Helpers.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -22,16 +24,20 @@ public class Ship implements Drawable {
     private Weapon weapon;
     private int rotation;
     private final int initalRotation = 90; // ship starts off facing up
+    private Dimension screenSize;
 
     public static final int MOVEMENT_SPEED = 2;
     public static final int TURNING_SPEED = 4;
 
     public Ship() {
-        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0),
-                new Weapon(new Laser(new Vector(), new Vector())), "graphics/Arwing-Blue.gif");
+        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Weapon(new Laser(new Vector(), new Vector())), "graphics/Arwing-Blue.gif", new Dimension(1572, 912));
     }
 
-    public Ship(Vector position, Vector velocity, Vector acceleration, Weapon weapon, String iconAddress) {
+    public Ship(Dimension screenSize) {
+        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Weapon(new Laser(new Vector(), new Vector())), "graphics/Arwing-Blue.gif", screenSize);
+    }
+
+    public Ship(Vector position, Vector velocity, Vector acceleration, Weapon weapon, String iconAddress, Dimension screensize) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
