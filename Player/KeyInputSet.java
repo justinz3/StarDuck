@@ -7,19 +7,20 @@ import java.awt.event.KeyEvent;
 
 public enum KeyInputSet {
 
-    WASD (KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, true);
+    WASD (KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_SPACE, true);
 
 
     private int forward, left, backward, right;
     private int primaryShoot, secondaryShoot; // TODO allow shooting
     private boolean useMouse;
 
-    KeyInputSet(int forward, int left, int backward, int right, boolean useMouse) {
+    KeyInputSet(int forward, int left, int backward, int right, int primaryShoot, boolean useMouse) {
 
         this.forward = forward;
         this.left = left;
         this.backward = backward;
         this.right = right;
+        this.primaryShoot = primaryShoot;
 
         this.useMouse = useMouse;
     }
