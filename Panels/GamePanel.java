@@ -154,8 +154,11 @@ public class GamePanel extends JPanel {
                     if(object instanceof Player)
                         ((Player) object).updateTimeSinceLastFire(delay);
                     else if(object instanceof Projectile) {
-                        Vector position = ((Projectile) object).getPosition();
-                        if(position.getX() <= -30 || position.getY() <= -30 || position.getX() >= getWidth() + 30 || position.getY() >= getHeight() + 30)
+                        Projectile projectile = (Projectile) object;
+                        Vector position = projectile.getPosition();
+                        Dimension size = projectile.getImageSize();
+
+                        if(position.getX() <= -1 * size.getWidth() || position.getY() <= -1 * size.getHeight() || position.getX() >= getWidth() + size.getWidth() || position.getY() >= getHeight() + size.getHeight())
                             objectsToRemove.add(object);
                     }
                 }
@@ -163,6 +166,8 @@ public class GamePanel extends JPanel {
                 // Avoids ConcurrentModificationExceptions
                 for(Drawable object : objectsToRemove)
                     objects.remove(object);
+
+                System.out.println(objects.size());
             }
         }
     }

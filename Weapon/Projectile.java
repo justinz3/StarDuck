@@ -100,4 +100,6 @@ public abstract class Projectile implements Drawable {
     public Vector getVelocity() {
         return velocity;
     }
+
+    public abstract Dimension getImageSize();
 }
