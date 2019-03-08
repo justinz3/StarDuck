@@ -46,6 +46,10 @@ public class Player implements Drawable {
         return ship.getRotation();
     }
 
+    public void zeroVelocity() {
+        velocity = new Vector(0, 0);
+    }
+
     public void moveForward() {
         if(velocity.getY() < Ship.MOVEMENT_SPEED)
             velocity.add(new Vector(0, Ship.MOVEMENT_SPEED));
@@ -108,7 +112,7 @@ public class Player implements Drawable {
         else {
             copy = getForwardMovement(velocity.getY(), ship.getRotation());
         }
-        ;
+
         copy.invertY();
         ship.setVelocity(copy);
         ship.move();

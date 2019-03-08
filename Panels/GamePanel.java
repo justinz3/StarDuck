@@ -120,29 +120,20 @@ public class GamePanel extends JPanel {
                 for (int i = 0; i < objects.size(); i++) {
                     if (objects.get(i) instanceof Player) {
                         Player player = (Player) objects.get(i);
-                        if (isPressed.containsKey(player.input.getForward())
-                                && isPressed.get(player.input.getForward())) {
+                        if (isPressed.getOrDefault(player.input.getForward(), false))
                             player.moveForward();
-                        }
-                        else {
-                            player.stopForward();
-                        }
-                        if (isPressed.containsKey(player.input.getBackward())
-                                && isPressed.get(player.input.getBackward())) {
+                        else if(isPressed.getOrDefault(player.input.getBackward(), false))
                             player.moveBackward();
-                        }
-                        else {
-                            player.stopBackward();
-                        }
-                        if (isPressed.containsKey(player.input.getLeft())
-                                && isPressed.get(player.input.getLeft())) {
+                        else
+                            player.zeroVelocity();
+
+                        if (isPressed.getOrDefault(player.input.getLeft(), false)) {
                             if (player.isStrafing())
                                 player.strafeLeft();
                             else
                                 player.turnLeft();
                         }
-                        if (isPressed.containsKey(player.input.getRight())
-                                && isPressed.get(player.input.getRight())) {
+                        else if (isPressed.getOrDefault(player.input.getRight(), false)) {
                             if (player.isStrafing())
                                 player.strafeRight();
                             else
