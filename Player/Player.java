@@ -2,6 +2,7 @@ package Player;
 
 import Physics.Drawable;
 import Physics.Vector;
+import Weapon.Projectile;
 
 import java.awt.*;
 
@@ -12,12 +13,14 @@ public class Player implements Drawable {
     public final KeyInputSet input;
     private Vector velocity;
     private boolean strafing;
+    private int timeSinceLastFire;
 
     public Player(Ship ship, KeyInputSet input, boolean strafing) {
         this.ship = ship;
         score = 0;
         this.input = input;
         this.strafing = strafing;
+        this.timeSinceLastFire = -1;
 
         velocity = new Vector(0, 0);
     }
@@ -51,22 +54,22 @@ public class Player implements Drawable {
     }
 
     public void moveForward() {
-        if(velocity.getY() < Ship.MOVEMENT_SPEED)
+        if (velocity.getY() < Ship.MOVEMENT_SPEED)
             velocity.add(new Vector(0, Ship.MOVEMENT_SPEED));
     }
 
     public void moveBackward() {
-        if(velocity.getY() > -Ship.MOVEMENT_SPEED)
+        if (velocity.getY() > -Ship.MOVEMENT_SPEED)
             velocity.add(new Vector(0, -Ship.MOVEMENT_SPEED));
     }
 
     public void strafeRight() {
-        if(velocity.getX() < Ship.MOVEMENT_SPEED)
+        if (velocity.getX() < Ship.MOVEMENT_SPEED)
             velocity.add(new Vector(Ship.MOVEMENT_SPEED, 0));
     }
 
     public void strafeLeft() {
-        if(velocity.getX() > -Ship.MOVEMENT_SPEED)
+        if (velocity.getX() > -Ship.MOVEMENT_SPEED)
             velocity.add(new Vector(-Ship.MOVEMENT_SPEED, 0));
     }
 
@@ -106,10 +109,9 @@ public class Player implements Drawable {
     public void move() {
 
         Vector copy;
-        if(strafing) {
+        if (strafing) {
             copy = new Vector(velocity);
-        }
-        else {
+        } else {
             copy = getForwardMovement(velocity.getY(), ship.getRotation());
         }
 
@@ -122,4 +124,22 @@ public class Player implements Drawable {
         ship.draw(g);
         // TODO draw more things
     }
+
+    public Projectile fire() {
+        Projectile potentialProjectile = ship.fire();
+        if (timeSinceLastFire >= potentialProjectile.getReload()) {
+            // Allowed to shoot
+            timeSinceLastFire = 0;
+            return ship.fire();
+        }
+        return null;
+    }
+
+    public void updateTimeSinceLastFire(int amount) {
+        if (timeSinceLastFire < 0)
+            timeSinceLastFire = amount;
+        else
+            timeSinceLastFire += amount;
+    }
+
 }

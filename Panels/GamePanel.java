@@ -122,7 +122,7 @@ public class GamePanel extends JPanel {
                         Player player = (Player) objects.get(i);
                         if (isPressed.getOrDefault(player.input.getForward(), false))
                             player.moveForward();
-                        else if(isPressed.getOrDefault(player.input.getBackward(), false))
+                        else if (isPressed.getOrDefault(player.input.getBackward(), false))
                             player.moveBackward();
                         else
                             player.zeroVelocity();
@@ -132,26 +132,37 @@ public class GamePanel extends JPanel {
                                 player.strafeLeft();
                             else
                                 player.turnLeft();
-                        }
-                        else if (isPressed.getOrDefault(player.input.getRight(), false)) {
+                        } else if (isPressed.getOrDefault(player.input.getRight(), false)) {
                             if (player.isStrafing())
                                 player.strafeRight();
                             else
                                 player.turnRight();
                         }
 
-                        if (isPressed.containsKey(player.input.getPrimaryShoot())
-                                && isPressed.get(player.input.getPrimaryShoot())) {
-                            Projectile proj = player.getShip().fire();
-                            objects.add(proj);
+                        if (isPressed.getOrDefault(player.input.getPrimaryShoot(), false)) {
+                            Projectile proj = player.fire();
+                            if (proj != null)
+                                objects.add(proj);
                         }
                     }
                 }
 
                 time += delay;
+                ArrayList<Drawable> objectsToRemove = new ArrayList<>();
                 for (Drawable object : objects) {
                     object.move();
+                    if(object instanceof Player)
+                        ((Player) object).updateTimeSinceLastFire(delay);
+                    else if(object instanceof Projectile) {
+                        Vector position = ((Projectile) object).getPosition();
+                        if(position.getX() <= -30 || position.getY() <= -30 || position.getX() >= getWidth() + 30 || position.getY() >= getHeight() + 30)
+                            objectsToRemove.add(object);
+                    }
                 }
+
+                // Avoids ConcurrentModificationExceptions
+                for(Drawable object : objectsToRemove)
+                    objects.remove(object);
             }
         }
     }
