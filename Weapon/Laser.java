@@ -20,6 +20,7 @@ public class Laser extends Projectile implements Drawable {
         displacement.add(Vector.scalarMult(currentPosition, -1));
         double angle = Math.atan2(displacement.getY(), displacement.getX());
         laserGraphics = Helpers.rotateImage(laserGraphics, angle);
+        this.setReload(500);
 
     }
 

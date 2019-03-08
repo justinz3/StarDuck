@@ -166,8 +166,6 @@ public class GamePanel extends JPanel {
                 // Avoids ConcurrentModificationExceptions
                 for(Drawable object : objectsToRemove)
                     objects.remove(object);
-
-                System.out.println(objects.size());
             }
         }
     }
