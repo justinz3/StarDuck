@@ -3,22 +3,24 @@
 
 package Physics;
 
-import javax.swing.*;
 import java.awt.*;
 
-public abstract class Shape implements Drawable {
+public abstract class MoveableShape implements Drawable, Moveable {
 
     private Vector position;
+    private int rotation = 0;
+    private Vector centerOfRotation;
 
-    public Shape() {
+    public MoveableShape() {
         position = new Vector(0, 0);
     }
 
-    public Shape(Vector position) {
+    public MoveableShape(Vector position) {
         this.position = position;
+        this.centerOfRotation = new Vector(position);
     }
 
-    public abstract boolean isTouching(Shape other);
+    public abstract boolean isTouching(MoveableShape other);
 
     public abstract void draw(Graphics g);
 
@@ -35,6 +37,22 @@ public abstract class Shape implements Drawable {
 
     public void setPosition(Vector position) {
         this.position = position;
+    }
+
+    public int getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(int degrees) {
+        this.rotation = degrees;
+    }
+
+    public Vector getCenterOfRotation() {
+        return centerOfRotation;
+    }
+
+    public void setCenterOfRotation(Vector centerOfRotation) {
+        this.centerOfRotation = centerOfRotation;
     }
 
 }

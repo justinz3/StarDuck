@@ -1,12 +1,13 @@
 package Player;
 
 import Physics.Drawable;
+import Physics.Moveable;
 import Physics.Vector;
 import Weapon.Projectile;
 
 import java.awt.*;
 
-public class Player implements Drawable {
+public class Player implements Drawable, Moveable {
 
     private Ship ship;
     private int score;

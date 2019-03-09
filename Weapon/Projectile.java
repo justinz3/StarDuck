@@ -4,12 +4,13 @@
 package Weapon;
 
 import Physics.Drawable;
+import Physics.Moveable;
 import Physics.Vector;
 
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class Projectile implements Drawable {
+public abstract class Projectile implements Drawable, Moveable {
 
     private int damage; // healing can be negative damage
     private int health;

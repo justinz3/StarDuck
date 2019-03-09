@@ -8,25 +8,25 @@ package Physics;
  * Created: 6-21-18
  */
 
-import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.util.*;
 
-public class Rectangle extends Shape {
+public class MoveableRectangle extends MoveableShape {
     private double width, height;
 
     // constructors -----------------------------------------------------------------------------------------------------
-    public Rectangle() {
-        this(new Physics.Vector(100, 100), 50, 50);
-    }
+//    public MoveableRectangle() {
+//        this(new Physics.Vector(100, 100), 50, 50);
+//    }
 
-    public Rectangle(Vector position, double width, double height) {
+    public MoveableRectangle(Vector position, double width, double height) {
         super(position);
         setWidth(width);
         setHeight(height);
     }
 
-    public Rectangle(Rectangle other) {
+    public MoveableRectangle(MoveableRectangle other) {
         this(other.getPosition(), other.getWidth(), other.getHeight());
     }
 
@@ -43,9 +43,17 @@ public class Rectangle extends Shape {
 
     public void draw(Graphics g) {
         // Translates circle's center to rectangle's origin for drawing.
-        g.drawRect((int) (getPosition().getX() - Math.max(-width / 2, width / 2)),
-                (int) (getPosition().getY() - Math.max(-height / 2, height / 2)),
-                (int) Math.abs(width), (int) Math.abs(height));
+        AffineTransform tx = new AffineTransform();
+        tx.rotate(Math.toRadians(getRotation()), getCenterOfRotation().getX(), getCenterOfRotation().getY());
+
+        int x = (int) (getPosition().getX() - Math.max(-width / 2, width / 2));
+        int y = (int) (getPosition().getY() - Math.max(-height / 2, height / 2));
+        Rectangle rect = new Rectangle(x, y, (int) width, (int) height);
+        Shape newShape = tx.createTransformedShape(rect);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.draw(newShape);
+
+        //g.drawRect(x, y, (int) Math.abs(width), (int) Math.abs(height));
     }
 
     public void fill(Graphics g) {
@@ -64,9 +72,9 @@ public class Rectangle extends Shape {
         return containsPoint(position.getX(), position.getY());
     }
 
-    public boolean isTouching(Shape other) {
-        if (other instanceof Rectangle) {
-            Rectangle rect = (Rectangle) other;
+    public boolean isTouching(MoveableShape other) {
+        if (other instanceof MoveableRectangle) {
+            MoveableRectangle rect = (MoveableRectangle) other;
             return ((minX() <= rect.minX() && rect.minX() <= maxX()) || (rect.minX() <= minX() && minX() <= rect.maxX())) &&
                     ((minY() <= rect.minY() && rect.minY() <= maxY()) || (rect.minY() <= minY() && minY() <= rect.maxY()));
         }
@@ -75,8 +83,8 @@ public class Rectangle extends Shape {
         return false;
     }
 
-    public boolean willTouch(Rectangle other) {
-        Rectangle a = new Rectangle(this), b = new Rectangle(other);
+    public boolean willTouch(MoveableRectangle other) {
+        MoveableRectangle a = new MoveableRectangle(this), b = new MoveableRectangle(other);
         return a.isTouching(b);
     }
 
@@ -103,6 +111,14 @@ public class Rectangle extends Shape {
     public String toString() {
         return String.format("TL: (%d, %d), W: %d, H: %d", (int) minX(), (int) minY(),
                 (int) getWidth(), (int) getHeight());
+    }
+
+    public ArrayList<Line> toLines() {
+        ArrayList<Line> lines = new ArrayList<>();
+
+        //lines.add(new Line(new Vector()));
+
+        return null; // TODO finish
     }
 
     // mutators -----------------------------------------------------------------------------------------------------

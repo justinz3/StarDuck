@@ -24,7 +24,7 @@ public class GamePanel extends JPanel {
     private int width, height;
     private int cornerDisplacementX, cornerDisplacementY;
 
-    private Physics.Rectangle playLocal, playLAN;
+    private MoveableRectangle playLocal, playLAN;
     private final int buttonWidth = 195, buttonHeight = 115;
     private MouseAdapter clickAreaListener;
 
@@ -150,7 +150,10 @@ public class GamePanel extends JPanel {
                 time += delay;
                 ArrayList<Drawable> objectsToRemove = new ArrayList<>();
                 for (Drawable object : objects) {
-                    object.move();
+                    if(object instanceof Moveable) {
+                        ((Moveable) object).move();
+                    }
+
                     if(object instanceof Player)
                         ((Player) object).updateTimeSinceLastFire(delay);
                     else if(object instanceof Projectile) {
@@ -166,6 +169,8 @@ public class GamePanel extends JPanel {
                 // Avoids ConcurrentModificationExceptions
                 for(Drawable object : objectsToRemove)
                     objects.remove(object);
+
+                //System.out.println(objects.size());
             }
         }
     }
