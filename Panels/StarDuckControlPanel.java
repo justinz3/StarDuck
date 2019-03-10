@@ -24,6 +24,7 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     }
 
     private PanelType currentlyVisible;
+
     public StarDuckControlPanel(JFrame parent) {
         this.parent = parent;
         this.mainMenuPanel = new MainMenuPanel(786, 456, this);
@@ -63,13 +64,13 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     }
 
     public boolean running() {
-        if(gamePanel == null)
+        if (gamePanel == null)
             return false;
         return gamePanel.isRunning();
     }
 
     public void startGame() {
-        if(gamePanel != null && gamePanel.isRunning())
+        if (gamePanel != null && gamePanel.isRunning())
             JOptionPane.showMessageDialog(this, "The game has already started!", "Uh Oh!", JOptionPane.ERROR_MESSAGE);
         else
             JOptionPane.showMessageDialog(this, "Use the buttons on the screen to choose a game mode!", "Start Game", JOptionPane.PLAIN_MESSAGE);
@@ -80,8 +81,13 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     }
 
     public void pauseGame() {
-        if(currentlyVisible == PanelType.GAME)
+        if (currentlyVisible == PanelType.GAME) {
             gamePanel.togglePause();
+            if(gamePanel.isRunning())
+                controlPanel.enableStopButton();
+            else
+                controlPanel.disableStopButton();
+        }
     }
 
     public String getInstructions() {
@@ -97,7 +103,7 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     }
 
     public void stopGame() {
-        if(currentlyVisible == PanelType.GAME)
+        if (currentlyVisible == PanelType.GAME)
             gamePanel.endGame();
     }
 
