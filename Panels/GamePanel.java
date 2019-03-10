@@ -124,6 +124,14 @@ public class GamePanel extends JPanel {
             if (isRunning()) {
                 time += delay;
 
+                // Clear dead players
+                for(int i = 0; i < players.size(); i++) {
+                    if(players.get(i).getShip().isDead()) {
+                        players.remove(players.get(i));
+                        i--;
+                    }
+                }
+
                 // Set Player movement
                 for (Player player : players) {
 
@@ -187,6 +195,10 @@ public class GamePanel extends JPanel {
                     for (int j = 0; j < objects.size(); j++) {
                         if (i == j)
                             continue;
+                        if(i < 0)
+                            break;
+                        if(j < 0)
+                            continue;
 
                         //System.out.println(i + " " + j);
                         Hittable a = objects.get(i), b = objects.get(j);
@@ -195,8 +207,14 @@ public class GamePanel extends JPanel {
                             continue;
 
                         if (a.getHitbox().isTouching(b.getHitbox())) {
+                            System.out.println("IMPACT");
+
+                            System.out.println("Before: " + a.getHealth() + " " + b.getHealth());
+
                             boolean bIsDead = a.impact(b);
                             boolean aIsDead = b.impact(a);
+
+                            System.out.println("After: " + a.getHealth() + " " + b.getHealth());
 
                             int deltaI = 0, deltaJ = 0;
                             if (bIsDead) {

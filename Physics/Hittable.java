@@ -50,7 +50,7 @@ public abstract class Hittable {
 
     public boolean takeDamage(double damage) {
         health -= damage;
-        return health <= 0;
+        return isDead();
     }
 
     public int getTeam() {
@@ -59,5 +59,9 @@ public abstract class Hittable {
 
     public void setTeam(int team) {
         this.team = team;
+    }
+
+    public boolean isDead() {
+        return health <= 0;
     }
 }

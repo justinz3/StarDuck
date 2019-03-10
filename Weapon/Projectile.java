@@ -31,7 +31,7 @@ public abstract class Projectile extends Interactable {
         this(currentPosition, targetPosition, other.getDamage(), other.getHealth(), other.timeCreated, other.fuse, other.speed, other.getHitbox(), team);
     }
 
-    public abstract void onImpact(Drawable other); // what the projectile does when it hits something
+    public abstract void onImpact(Hittable other); // what the projectile does when it hits something
 
     public abstract void draw(Graphics g);
 

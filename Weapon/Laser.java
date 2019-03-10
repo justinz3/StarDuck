@@ -30,7 +30,7 @@ public class Laser extends Projectile implements Drawable {
         return hitbox;
     }
 
-    public void onImpact(Drawable other) {
+    public void onImpact(Hittable other) {
         if (other instanceof Ship) {
             Ship ship = (Ship) other;
             ship.takeDamage(getDamage());

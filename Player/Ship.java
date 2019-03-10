@@ -134,7 +134,9 @@ public class Ship extends Interactable {
     }
 
     public Projectile fire() {
-        return weapon.fire(new Vector(position.getX() + bufferedImage.getWidth() / 2, position.getY() + bufferedImage.getHeight() / 2), Math.toRadians(-rotation));
+        Vector frontDisplacement = new Vector(0, -bufferedImage.getHeight() / 2);
+        frontDisplacement.rotate(Math.toRadians(-rotation + initalRotation));
+        return weapon.fire(new Vector(getCenter().getX() + frontDisplacement.getX(), getCenter().getY() + frontDisplacement.getY()), Math.toRadians(-rotation));
     }
 
     public void turn(int degCCW) {
@@ -146,7 +148,11 @@ public class Ship extends Interactable {
     }
 
     private void updateCenter() {
-        shipType.hitbox.setCenter(new Vector(position.getX() + bufferedImage.getWidth() / 2, position.getY() + bufferedImage.getHeight() / 2));
+        shipType.hitbox.setCenter(getCenter());
+    }
+
+    private Vector getCenter() {
+        return new Vector(position.getX() + bufferedImage.getWidth() / 2, position.getY() + bufferedImage.getHeight() / 2);
     }
 
     // Getters and Setters

@@ -129,4 +129,10 @@ public class Vector {
         y *= scalar;
     }
 
+    public void rotate(double radians) {
+         Vector rotated = scalarMult(unitVector(radians + getAngle()), getMagnitude());
+         setX(rotated.getX());
+         setY(rotated.getY());
+    }
+
 }
