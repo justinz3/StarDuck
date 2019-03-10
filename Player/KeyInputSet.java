@@ -7,7 +7,8 @@ import java.awt.event.KeyEvent;
 
 public enum KeyInputSet {
 
-    WASD (KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_SPACE, true);
+    WASD (KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_SPACE, true),
+    ARROW_KEYS (KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER, false);
 
 
     private int forward, left, backward, right;

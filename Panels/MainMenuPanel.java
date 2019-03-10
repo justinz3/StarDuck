@@ -1,6 +1,6 @@
 package Panels;
 
-import Physics.MoveableRectangle;
+import Physics.MovableRectangle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ public class MainMenuPanel extends JPanel {
     private int width, height;
     private int cornerDisplacementX, cornerDisplacementY;
 
-    private MoveableRectangle playLocal, playLAN;
+    private MovableRectangle playLocal, playLAN;
     private final int buttonWidth = 195, buttonHeight = 115;
     private MouseAdapter clickAreaListener;
 
@@ -57,10 +57,10 @@ public class MainMenuPanel extends JPanel {
     }
 
     private void initMenuButtons() {
-        playLocal = new MoveableRectangle(new Physics.Vector(cornerDisplacementX + 20 + buttonWidth / 2,
+        playLocal = new MovableRectangle(new Physics.Vector(cornerDisplacementX + 20 + buttonWidth / 2,
                 cornerDisplacementY + 170 + buttonHeight / 2), buttonWidth, buttonHeight);
 
-        playLAN = new MoveableRectangle(new Physics.Vector(cornerDisplacementX + 570 + buttonWidth / 2,
+        playLAN = new MovableRectangle(new Physics.Vector(cornerDisplacementX + 570 + buttonWidth / 2,
                 cornerDisplacementY + 170 + buttonHeight / 2), buttonWidth, buttonHeight);
     }
 

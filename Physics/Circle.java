@@ -10,7 +10,7 @@ package Physics;
 
 import java.awt.*;
 
-public class Circle extends MoveableShape
+public class Circle extends MovableShape
 {
     private double radius;
     private Color color;
@@ -67,7 +67,7 @@ public class Circle extends MoveableShape
         return xSquared + ySquared - radiusSquared <= 0;
     }
 
-    public boolean isTouching(MoveableShape other)
+    public boolean isTouching(MovableShape other)
     {
         if(other instanceof Circle) {
             Circle circle = (Circle) other;

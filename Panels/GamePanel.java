@@ -16,7 +16,8 @@ import java.util.*;
 
 public class GamePanel extends JPanel {
 
-    private ArrayList<Drawable> objects;
+    private ArrayList<Interactable> objects;
+    private ArrayList<Player> players;
 
     private JLayeredPane background;
     private Image backgroundImage;
@@ -24,7 +25,7 @@ public class GamePanel extends JPanel {
     private int width, height;
     private int cornerDisplacementX, cornerDisplacementY;
 
-    private MoveableRectangle playLocal, playLAN;
+    private MovableRectangle playLocal, playLAN;
     private final int buttonWidth = 195, buttonHeight = 115;
     private MouseAdapter clickAreaListener;
 
@@ -64,8 +65,12 @@ public class GamePanel extends JPanel {
         this.mouseListener = new ClickListener();
         addMouseListener(mouseListener);
 
-        objects = new ArrayList<Drawable>();
-        objects.add(new Player(new Ship(this.getSize()), KeyInputSet.WASD, false));
+        objects = new ArrayList<>();
+        players = new ArrayList<Player>();
+        addPlayer(new Player(new Ship(this.getSize()), KeyInputSet.WASD, false));
+        addPlayer(new Player(new Ship(new Vector(200, 200), new Vector(), new Vector(),
+                new Weapon(new Laser(new Vector(), new Vector())), Ship.ShipType.GREEN, this.getSize()),
+                KeyInputSet.ARROW_KEYS, false));
 
         running = true;
 
@@ -86,6 +91,11 @@ public class GamePanel extends JPanel {
         timer.start();
     }
 
+    private void addPlayer(Player player) {
+        players.add(player);
+        objects.add(player.getShip());
+    }
+
     // ---------------------------------------------------------
 
     public void paintComponent(Graphics g) {
@@ -96,10 +106,6 @@ public class GamePanel extends JPanel {
 
         for (Drawable object : objects) {
             object.draw(g);
-            if (object instanceof Player) {
-                Player player = (Player) object;
-                //System.out.printf("%s %s\n", player.getShip().getPosition(), player.getShip().getVelocity());
-            }
         }
     }
 
@@ -117,60 +123,101 @@ public class GamePanel extends JPanel {
 
         public void actionPerformed(ActionEvent e) {
             if (isRunning()) {
-                for (int i = 0; i < objects.size(); i++) {
-                    if (objects.get(i) instanceof Player) {
-                        Player player = (Player) objects.get(i);
-                        if (isPressed.getOrDefault(player.input.getForward(), false))
-                            player.moveForward();
-                        else if (isPressed.getOrDefault(player.input.getBackward(), false))
-                            player.moveBackward();
-                        else
-                            player.zeroVelocity();
+                time += delay;
 
-                        if (isPressed.getOrDefault(player.input.getLeft(), false)) {
-                            if (player.isStrafing())
-                                player.strafeLeft();
-                            else
-                                player.turnLeft();
-                        } else if (isPressed.getOrDefault(player.input.getRight(), false)) {
-                            if (player.isStrafing())
-                                player.strafeRight();
-                            else
-                                player.turnRight();
-                        }
+                // Set Player movement
+                for (Player player : players) {
 
-                        if (isPressed.getOrDefault(player.input.getPrimaryShoot(), false)) {
-                            Projectile proj = player.fire();
-                            if (proj != null)
-                                objects.add(proj);
-                        }
+                    if (isPressed.getOrDefault(player.input.getForward(), false))
+                        player.moveForward();
+                    else if (isPressed.getOrDefault(player.input.getBackward(), false))
+                        player.moveBackward();
+                    else {
+                        player.zeroVelocity();
                     }
+
+                    if (isPressed.getOrDefault(player.input.getLeft(), false)) {
+                        if (player.isStrafing())
+                            player.strafeLeft();
+                        else
+                            player.turnLeft();
+                    } else if (isPressed.getOrDefault(player.input.getRight(), false)) {
+                        if (player.isStrafing())
+                            player.strafeRight();
+                        else
+                            player.turnRight();
+                    }
+
+                    if (isPressed.getOrDefault(player.input.getPrimaryShoot(), false)) {
+                        Projectile proj = player.fire();
+                        if (proj != null)
+                            objects.add(proj);
+                    }
+
+                    player.move();
                 }
 
-                time += delay;
-                ArrayList<Drawable> objectsToRemove = new ArrayList<>();
-                for (Drawable object : objects) {
-                    if(object instanceof Moveable) {
-                        ((Moveable) object).move();
-                    }
+                for (Player player : players) {
+                    player.updateTimeSinceLastFire(delay);
+                }
 
-                    if(object instanceof Player)
-                        ((Player) object).updateTimeSinceLastFire(delay);
-                    else if(object instanceof Projectile) {
+                // Move everything and Check for projectiles outside the screen
+                ArrayList<Interactable> objectsToRemove = new ArrayList<>();
+                for (Interactable object : objects) {
+                    object.move();
+
+                    if(object instanceof Projectile) {
                         Projectile projectile = (Projectile) object;
                         Vector position = projectile.getPosition();
                         Dimension size = projectile.getImageSize();
 
-                        if(position.getX() <= -1 * size.getWidth() || position.getY() <= -1 * size.getHeight() || position.getX() >= getWidth() + size.getWidth() || position.getY() >= getHeight() + size.getHeight())
+                        if(position.getX() <= -1 * size.getWidth() || position.getY() <= -1 * size.getHeight() ||
+                                position.getX() >= getWidth() + size.getWidth() || position.getY() >= getHeight() + size.getHeight())
                             objectsToRemove.add(object);
                     }
                 }
 
                 // Avoids ConcurrentModificationExceptions
-                for(Drawable object : objectsToRemove)
+                for(Interactable object : objectsToRemove)
                     objects.remove(object);
 
-                //System.out.println(objects.size());
+
+                // Check for Collisions
+                for(int i = 0; i < objects.size(); i++) {
+                    for(int j = 0; j < objects.size();j++) {
+                        if(i == j)
+                            continue;
+
+                        //System.out.println(i + " " + j);
+                        Hittable a = objects.get(i), b = objects.get(j);
+                        if(a.getHitbox().isTouching(b.getHitbox())) {
+                            System.out.println("IMPACT");
+
+                            boolean bIsDead = a.impact(b);
+                            boolean aIsDead = b.impact(a);
+
+                            int deltaI = 0, deltaJ = 0;
+                            if(bIsDead) {
+                                objects.remove(b);
+                                if(i > j)
+                                    deltaI--;
+                                deltaJ--;
+                            }
+                            if(aIsDead) {
+                                objects.remove(a);
+                                if(j > i)
+                                    deltaJ--;
+                                deltaI--;
+                            }
+
+                            i += deltaI;
+                            j += deltaJ;
+                        }
+
+                    }
+
+                }
+
             }
         }
     }
@@ -270,11 +317,8 @@ public class GamePanel extends JPanel {
     }
 
     private void stopAllPlayers() {
-        for (int i = 0; i < objects.size(); i++) {
-            if (objects.get(i) instanceof Player) {
-                Player player = (Player) objects.get(i);
-                player.setVelocity(new Vector(0, 0));
-            }
+        for (Player player : players) {
+            player.setVelocity(new Vector(0, 0));
         }
     }
 }

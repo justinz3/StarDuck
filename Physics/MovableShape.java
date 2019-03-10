@@ -5,22 +5,22 @@ package Physics;
 
 import java.awt.*;
 
-public abstract class MoveableShape implements Drawable, Moveable {
+public abstract class MovableShape implements Drawable, Movable {
 
     private Vector position;
     private int rotation = 0;
     private Vector centerOfRotation;
 
-    public MoveableShape() {
+    public MovableShape() {
         position = new Vector(0, 0);
     }
 
-    public MoveableShape(Vector position) {
+    public MovableShape(Vector position) {
         this.position = position;
         this.centerOfRotation = new Vector(position);
     }
 
-    public abstract boolean isTouching(MoveableShape other);
+    public abstract boolean isTouching(MovableShape other);
 
     public abstract void draw(Graphics g);
 
@@ -44,7 +44,7 @@ public abstract class MoveableShape implements Drawable, Moveable {
     }
 
     public void setRotation(int degrees) {
-        this.rotation = degrees;
+        this.rotation = degrees % 360;
     }
 
     public Vector getCenterOfRotation() {
@@ -53,6 +53,14 @@ public abstract class MoveableShape implements Drawable, Moveable {
 
     public void setCenterOfRotation(Vector centerOfRotation) {
         this.centerOfRotation = centerOfRotation;
+    }
+
+    public Vector getCenter() {
+        return getCenterOfRotation();
+    }
+
+    public void setCenter(Vector center) {
+        setCenterOfRotation(center);
     }
 
 }

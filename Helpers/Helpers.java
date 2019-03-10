@@ -1,5 +1,7 @@
 package Helpers;
 
+import Physics.Vector;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -52,5 +54,11 @@ public class Helpers {
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
         return op.filter(image, null);
+    }
+
+    public static double getAngle(Vector currentPosition, Vector targetPosition) {
+        Vector displacement = new Vector(targetPosition);
+        displacement.add(Vector.scalarMult(currentPosition, -1));
+        return Math.atan2(displacement.getY(), displacement.getX());
     }
 }

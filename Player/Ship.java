@@ -4,8 +4,8 @@
 package Player;
 
 import Physics.*;
-import Physics.MoveableRectangle;
-import Physics.MoveableShape;
+import Physics.MovableRectangle;
+import Physics.MovableShape;
 import Weapon.*;
 import Helpers.*;
 
@@ -16,12 +16,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Ship implements Drawable, Moveable {
+public class Ship extends Interactable {
 
     private Vector position, velocity, acceleration;
     private Image gif;
     private BufferedImage bufferedImage;
-    private int health;
     private Weapon weapon;
     private int rotation;
     private final int initalRotation = 90; // ship starts off facing up
@@ -32,21 +31,22 @@ public class Ship implements Drawable, Moveable {
     public static final int TURNING_SPEED = 1;
 
     public enum ShipType {
-        RED("graphics/Arwing-Red.gif", new MoveableRectangle(new Vector(97, 120), 20, 40), new MoveableRectangle(new Vector(132, 140), 90, 20)),
-        GREEN("graphics/Arwing-Green.gif", new MoveableRectangle(new Vector(90, 120), 15, 40), new MoveableRectangle(new Vector(124, 130), 82, 20)),
-        BLUE("graphics/Arwing-Blue.gif", new MoveableRectangle(new Vector(105, 120), 20, 40), new MoveableRectangle(new Vector(145, 140), 100, 20));
+        RED("graphics/Arwing-Red.gif", new MovableRectangle(new Vector(97, 120), 20, 40), new MovableRectangle(new Vector(132, 140), 90, 20)),
+        GREEN("graphics/Arwing-Green.gif", new MovableRectangle(new Vector(90, 120), 15, 40), new MovableRectangle(new Vector(124, 130), 82, 20)),
+        BLUE("graphics/Arwing-Blue.gif", new MovableRectangle(new Vector(105, 120), 20, 40), new MovableRectangle(new Vector(145, 140), 100, 20));
 
         private String iconAddress;
         private Hitbox hitbox, originalHitbox;
 
-        ShipType(String iconAddress, MoveableShape rect1, MoveableShape rect2) {
+        ShipType(String iconAddress, MovableShape rect1, MovableShape rect2) {
             this.iconAddress = iconAddress;
             this.hitbox = new Hitbox();
             hitbox.add(rect1);
             hitbox.add(rect2);
+
             this.originalHitbox = new Hitbox();
-            originalHitbox.add(new MoveableRectangle((MoveableRectangle) rect1));
-            originalHitbox.add(new MoveableRectangle((MoveableRectangle) rect2));
+            originalHitbox.add(new MovableRectangle((MovableRectangle) rect1));
+            originalHitbox.add(new MovableRectangle((MovableRectangle) rect2));
         }
     }
 
@@ -60,11 +60,14 @@ public class Ship implements Drawable, Moveable {
 
     public Ship (ShipType shipType, Dimension screenSize) {
         this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Weapon(new Laser(new Vector(), new Vector())), shipType, screenSize);
-        updateCenter();
     }
 
     public Ship(Vector position, Vector velocity, Vector acceleration, Weapon weapon, ShipType shipType, Dimension screensize) {
-        this.position = position;
+        super(shipType.hitbox, 10, 1); // TODO vary the health, or at least put it in a final variable
+
+        this.position = shipType.hitbox.getCenter(); // tie the hitbox and projectile positions together
+        this.position.setX(position.getX());
+        this.position.setY(position.getY());
         this.velocity = velocity;
         this.acceleration = acceleration;
         this.weapon = weapon;
@@ -79,12 +82,14 @@ public class Ship implements Drawable, Moveable {
 
         this.shipType = shipType;
         this.screenSize = screensize;
+
+        updateCenter();
     }
 
     public void draw(Graphics g) {
         g.drawImage(Helpers.rotateImage(gif, Math.toRadians(-rotation + initalRotation)), (int) position.getX(), (int) position.getY(), null);
 
-        //shipType.hitbox.draw(g);
+        shipType.hitbox.draw(g);
     }
 
     public void move() {
@@ -98,7 +103,7 @@ public class Ship implements Drawable, Moveable {
 
         velocity.add(acceleration);
         for (int index = 0; index < shipType.hitbox.size(); index++) {
-            MoveableRectangle originalRect = (MoveableRectangle) shipType.originalHitbox.get(index);
+            MovableRectangle originalRect = (MovableRectangle) shipType.originalHitbox.get(index);
             Vector relativePosition = new Vector(originalRect.getPosition());
             relativePosition.add(position);
             relativePosition.add(new Vector(-originalRect.getWidth() / 2.0, -originalRect.getHeight() / 2.0)); // Move position to be relative to the center of the Ship
@@ -114,10 +119,6 @@ public class Ship implements Drawable, Moveable {
 
     public Projectile fire() {
         return weapon.fire(new Vector(position.getX() + bufferedImage.getWidth() / 2, position.getY() + bufferedImage.getHeight() / 2), Math.toRadians(-rotation));
-    }
-
-    public void takeDamage(int damage) {
-        health -= damage;
     }
 
     public void turn(int degCCW) {
@@ -159,6 +160,10 @@ public class Ship implements Drawable, Moveable {
 
     public void addAcceleration(Vector acceleration) {
         this.acceleration.add(acceleration);
+    }
+
+    public Hitbox getHitbox() {
+        return shipType.hitbox;
     }
 
 }

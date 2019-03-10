@@ -3,17 +3,12 @@
 
 package Weapon;
 
-import Physics.Drawable;
-import Physics.Moveable;
-import Physics.Vector;
+import Physics.*;
 
-import javax.swing.*;
 import java.awt.*;
 
-public abstract class Projectile implements Drawable, Moveable {
+public abstract class Projectile extends Interactable {
 
-    private int damage; // healing can be negative damage
-    private int health;
     private int timeCreated;
     private int fuse;
     private Vector targetPosition;
@@ -21,10 +16,8 @@ public abstract class Projectile implements Drawable, Moveable {
     private double speed;
     private int reload;
 
-    public Projectile(Vector currentPosition, Vector targetPosition, int damage, int health, int timeCreated, int fuse, double speed) {
-
-        this.damage = damage;
-        this.health = health;
+    public Projectile(Vector currentPosition, Vector targetPosition, double damage, double health, int timeCreated, int fuse, double speed, Hitbox hitbox) {
+        super(hitbox, 1, damage); // health should be 1, so that it dies upon impact
         this.timeCreated = timeCreated;
         this.fuse = fuse;
         this.speed = speed;
@@ -35,15 +28,18 @@ public abstract class Projectile implements Drawable, Moveable {
     }
 
     public Projectile(Vector currentPosition, Vector targetPosition, Projectile other) {
-        this(currentPosition, targetPosition, other.damage, other.health, other.timeCreated, other.fuse, other.speed);
+        this(currentPosition, targetPosition, other.getDamage(), other.getHealth(), other.timeCreated, other.fuse, other.speed, other.getHitbox());
     }
 
     public abstract void onImpact(Drawable other); // what the projectile does when it hits something
 
     public abstract void draw(Graphics g);
 
+    public abstract Dimension getImageSize();
+
     public void move() {
         position.add(velocity);
+        getHitbox().get(0).setPosition(position);
     }
 
     public void setTarget(Vector targetPosition) {
@@ -56,14 +52,6 @@ public abstract class Projectile implements Drawable, Moveable {
         displacement.add(Vector.scalarMult(position, -1));
         double angle = displacement.getAngle();
         this.velocity = new Vector(speed * Math.cos(angle), speed * Math.sin(angle));
-    }
-
-    protected void setDamage(int damage) {
-        this.damage = damage;
-    }
-
-    protected void setHealth(int health) {
-        this.health = health;
     }
 
     protected void setTimeCreated(int timeCreated) {
@@ -86,10 +74,6 @@ public abstract class Projectile implements Drawable, Moveable {
         return reload;
     }
 
-    public int getDamage() {
-        return damage;
-    }
-
     public Vector getPosition() {
         return position;
     }
@@ -101,6 +85,4 @@ public abstract class Projectile implements Drawable, Moveable {
     public Vector getVelocity() {
         return velocity;
     }
-
-    public abstract Dimension getImageSize();
 }

@@ -1,13 +1,11 @@
 package Player;
 
-import Physics.Drawable;
-import Physics.Moveable;
-import Physics.Vector;
+import Physics.*;
 import Weapon.Projectile;
 
 import java.awt.*;
 
-public class Player implements Drawable, Moveable {
+public class Player implements Drawable, Movable {
 
     private Ship ship;
     private int score;
@@ -123,7 +121,7 @@ public class Player implements Drawable, Moveable {
 
     public void draw(Graphics g) {
         ship.draw(g);
-        // TODO draw more things
+        // TODO draw more things, like health? or is that part of the ship?
     }
 
     public Projectile fire() {
@@ -141,6 +139,10 @@ public class Player implements Drawable, Moveable {
             timeSinceLastFire = amount;
         else
             timeSinceLastFire += amount;
+    }
+
+    public Hitbox getHitbox() {
+        return ship.getHitbox();
     }
 
 }

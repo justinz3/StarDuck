@@ -97,6 +97,10 @@ public class Vector {
         return new Vector(a.getX() * scalar, a.getY() * scalar);
     }
 
+    public static Vector add(Vector a, Vector b) {
+        return new Vector(a.getX() + b.getX(), a.getY() + b.getY());
+    }
+
     public double getAngle() {
         // returns angle in radians
         return Math.atan2(y, x);

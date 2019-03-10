@@ -1,11 +1,9 @@
 package Weapon;
 
 import Helpers.Helpers;
-import Physics.Drawable;
-import Physics.Vector;
+import Physics.*;
 import Player.Ship;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -15,13 +13,20 @@ public class Laser extends Projectile implements Drawable {
     private BufferedImage bufferedLaser = Helpers.toBufferedImage(laserGraphics);
 
     public Laser(Vector currentPosition, Vector targetPosition) {
-        super(currentPosition, targetPosition, 1, 1, -1, -1, 2);
-        Vector displacement = new Vector(targetPosition);
-        displacement.add(Vector.scalarMult(currentPosition, -1));
-        double angle = Math.atan2(displacement.getY(), displacement.getX());
+        super(currentPosition, targetPosition, 1, 1, -1, -1, 2,
+                Laser.getHitbox(currentPosition, Helpers.getAngle(currentPosition, targetPosition)));
+        double angle = Helpers.getAngle(currentPosition, targetPosition);
         laserGraphics = Helpers.rotateImage(laserGraphics, angle);
         this.setReload(500);
+    }
 
+    private static Hitbox getHitbox(Vector currentPosition, double angle) {
+        Hitbox hitbox = new Hitbox();
+        MovableRectangle rect = new MovableRectangle(currentPosition, 50, 20);
+        rect.setCenter(currentPosition);
+        rect.setRotation((int) Math.toDegrees(angle));
+        hitbox.add(rect); // TODO fix random values
+        return hitbox;
     }
 
     public void onImpact(Drawable other) {
@@ -34,6 +39,7 @@ public class Laser extends Projectile implements Drawable {
     public void draw(Graphics g) {
         //System.out.println(getPosition());
         g.drawImage(laserGraphics, (int) getPosition().getX(), (int) getPosition().getY(), null);
+        getHitbox().draw(g);
     }
 
     public Dimension getImageSize() {
