@@ -55,15 +55,15 @@ public class Ship extends Interactable {
     }
 
     public Ship(Dimension screenSize) {
-        this(ShipType.BLUE, screenSize);
+        this(ShipType.BLUE, screenSize, 0);
     }
 
-    public Ship (ShipType shipType, Dimension screenSize) {
-        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Weapon(new Laser(new Vector(), new Vector())), shipType, screenSize);
+    public Ship (ShipType shipType, Dimension screenSize, int team) {
+        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Weapon(new Laser(new Vector(), new Vector(), team), team), shipType, screenSize, team);
     }
 
-    public Ship(Vector position, Vector velocity, Vector acceleration, Weapon weapon, ShipType shipType, Dimension screensize) {
-        super(shipType.hitbox, 10, 1); // TODO vary the health, or at least put it in a final variable
+    public Ship(Vector position, Vector velocity, Vector acceleration, Weapon weapon, ShipType shipType, Dimension screensize, int team) {
+        super(shipType.hitbox, 10, 1, team); // TODO vary the health, or at least put it in a final variable
 
         this.position = shipType.hitbox.getCenter(); // tie the hitbox and projectile positions together
         this.position.setX(position.getX());

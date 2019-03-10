@@ -67,9 +67,8 @@ public class GamePanel extends JPanel {
 
         objects = new ArrayList<>();
         players = new ArrayList<Player>();
-        addPlayer(new Player(new Ship(this.getSize()), KeyInputSet.WASD, false));
-        addPlayer(new Player(new Ship(new Vector(200, 200), new Vector(), new Vector(),
-                new Weapon(new Laser(new Vector(), new Vector())), Ship.ShipType.GREEN, this.getSize()),
+        addPlayer(new Player(new Ship(Ship.ShipType.BLUE, this.getSize(), 1), KeyInputSet.WASD, false));
+        addPlayer(new Player(new Ship(new Vector(200, 200), new Vector(), new Vector(), new Weapon(new Laser(new Vector(), new Vector(), 2), 2), Ship.ShipType.GREEN, this.getSize(), 2),
                 KeyInputSet.NUMPAD, false));
 
         running = true;
@@ -166,59 +165,68 @@ public class GamePanel extends JPanel {
                 for (Interactable object : objects) {
                     object.move();
 
-                    if(object instanceof Projectile) {
+                    if (object instanceof Projectile) {
                         Projectile projectile = (Projectile) object;
                         Vector position = projectile.getPosition();
                         Dimension size = projectile.getImageSize();
 
-                        if(position.getX() <= -1 * size.getWidth() || position.getY() <= -1 * size.getHeight() ||
+                        if (position.getX() <= -1 * size.getWidth() || position.getY() <= -1 * size.getHeight() ||
                                 position.getX() >= getWidth() + size.getWidth() || position.getY() >= getHeight() + size.getHeight())
                             objectsToRemove.add(object);
                     }
                 }
 
                 // Avoids ConcurrentModificationExceptions
-                for(Interactable object : objectsToRemove)
+                for (Interactable object : objectsToRemove)
                     objects.remove(object);
 
 
                 // Check for Collisions
-//                for(int i = 0; i < objects.size(); i++) {
-//                    for(int j = 0; j < objects.size();j++) {
-//                        if(i == j)
-//                            continue;
-//
-//                        //System.out.println(i + " " + j);
-//                        Hittable a = objects.get(i), b = objects.get(j);
-//                        if(a.getHitbox().isTouching(b.getHitbox())) {
-//                            System.out.println("IMPACT");
-//
-//                            boolean bIsDead = a.impact(b);
-//                            boolean aIsDead = b.impact(a);
-//
-//                            int deltaI = 0, deltaJ = 0;
-//                            if(bIsDead) {
-//                                objects.remove(b);
-//                                if(i > j)
-//                                    deltaI--;
-//                                deltaJ--;
-//                            }
-//                            if(aIsDead) {
-//                                objects.remove(a);
-//                                if(j > i)
-//                                    deltaJ--;
-//                                deltaI--;
-//                            }
-//
-//                            i += deltaI;
-//                            j += deltaJ;
-//                        }
-//
-//                    }
+                for (int i = 0; i < objects.size(); i++) {
+                    for (int j = 0; j < objects.size(); j++) {
+                        if (i == j)
+                            continue;
 
-//                }
+                        //System.out.println(i + " " + j);
+                        Hittable a = objects.get(i), b = objects.get(j);
+
+                        if (a.getTeam() == b.getTeam())
+                            continue;
+
+                        if (a.getHitbox().isTouching(b.getHitbox())) {
+                            System.out.println("IMPACT");
+
+                            boolean bIsDead = a.impact(b);
+                            boolean aIsDead = b.impact(a);
+
+                            if (a instanceof Projectile)
+                                objects.remove(a);
+
+                            if (b instanceof Projectile)
+                                objects.remove(b);
+
+                            int deltaI = 0, deltaJ = 0;
+                            if (bIsDead) {
+                                objects.remove(b);
+                                if (i > j)
+                                    deltaI--;
+                                deltaJ--;
+                            }
+                            if (aIsDead) {
+                                objects.remove(a);
+                                if (j > i)
+                                    deltaJ--;
+                                deltaI--;
+                            }
+
+                            i += deltaI;
+                        }
+                    }
+
+                }
 
             }
+
         }
     }
 

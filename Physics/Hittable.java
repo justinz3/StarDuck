@@ -7,14 +7,17 @@ public abstract class Hittable {
     private double health;
     private Hitbox hitbox;
     private double damage; // damage done on impact
+    private int team;
 
     public Hittable() {
-        this(null, 0, 0);
+        this(null, 0, 0, 0);
     }
 
-    public Hittable(Hitbox hitbox, double health, double damage) {
+    public Hittable(Hitbox hitbox, double health, double damage, int team) {
         this.hitbox = hitbox;
         this.health = health;
+        this.damage = damage;
+        this.team = team;
     }
 
     public Hitbox getHitbox() {
@@ -48,5 +51,13 @@ public abstract class Hittable {
     public boolean takeDamage(double damage) {
         health -= damage;
         return health > 0;
+    }
+
+    public int getTeam() {
+        return team;
+    }
+
+    public void setTeam(int team) {
+        this.team = team;
     }
 }

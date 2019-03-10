@@ -14,9 +14,8 @@ public class Laser extends Projectile implements Drawable {
     private static Vector hitboxDisplacement = new Vector(-37, -40);
     private static int laserWidth = 60, laserHeight = 27;
 
-    public Laser(Vector currentPosition, Vector targetPosition) {
-        super(currentPosition, targetPosition, 1, 1, -1, -1, 2,
-                Laser.getHitbox(currentPosition, Helpers.getAngle(currentPosition, targetPosition)));
+    public Laser(Vector currentPosition, Vector targetPosition, int team) {
+        super(currentPosition, targetPosition, 1, 1, -1, -1, 2,  Laser.getHitbox(currentPosition, Helpers.getAngle(currentPosition, targetPosition)), team);
         double angle = Helpers.getAngle(currentPosition, targetPosition);
         laserGraphics = Helpers.rotateImage(laserGraphics, angle);
         this.setReload(500);

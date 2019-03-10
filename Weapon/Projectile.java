@@ -16,8 +16,8 @@ public abstract class Projectile extends Interactable {
     private double speed;
     private int reload;
 
-    public Projectile(Vector currentPosition, Vector targetPosition, double damage, double health, int timeCreated, int fuse, double speed, Hitbox hitbox) {
-        super(hitbox, 1, damage); // health should be 1, so that it dies upon impact
+    public Projectile(Vector currentPosition, Vector targetPosition, double damage, double health, int timeCreated, int fuse, double speed, Hitbox hitbox, int team) {
+        super(hitbox, 1, damage, team); // health should be 1, so that it dies upon impact
         this.timeCreated = timeCreated;
         this.fuse = fuse;
         this.speed = speed;
@@ -27,8 +27,8 @@ public abstract class Projectile extends Interactable {
         setVelocityFromTarget();
     }
 
-    public Projectile(Vector currentPosition, Vector targetPosition, Projectile other) {
-        this(currentPosition, targetPosition, other.getDamage(), other.getHealth(), other.timeCreated, other.fuse, other.speed, other.getHitbox());
+    public Projectile(Vector currentPosition, Vector targetPosition, Projectile other, int team) {
+        this(currentPosition, targetPosition, other.getDamage(), other.getHealth(), other.timeCreated, other.fuse, other.speed, other.getHitbox(), team);
     }
 
     public abstract void onImpact(Drawable other); // what the projectile does when it hits something
