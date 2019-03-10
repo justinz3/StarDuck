@@ -50,8 +50,6 @@ public class MovableRectangle extends MovableShape {
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.draw(getRotatedShape(Math.toRadians(getRotation())));
-
-        //g.drawRect(x, y, (int) Math.abs(width), (int) Math.abs(height));
     }
 
     public void fill(Graphics g) {

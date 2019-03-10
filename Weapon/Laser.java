@@ -11,6 +11,8 @@ public class Laser extends Projectile implements Drawable {
 
     private Image laserGraphics = Helpers.getImage("graphics/laser.png");
     private BufferedImage bufferedLaser = Helpers.toBufferedImage(laserGraphics);
+    private static Vector hitboxDisplacement = new Vector(-37, -40);
+    private static int laserWidth = 60, laserHeight = 27;
 
     public Laser(Vector currentPosition, Vector targetPosition) {
         super(currentPosition, targetPosition, 1, 1, -1, -1, 2,
@@ -22,7 +24,7 @@ public class Laser extends Projectile implements Drawable {
 
     private static Hitbox getHitbox(Vector currentPosition, double angle) {
         Hitbox hitbox = new Hitbox();
-        MovableRectangle rect = new MovableRectangle(currentPosition, 50, 20);
+        MovableRectangle rect = new MovableRectangle(currentPosition, laserWidth, laserHeight);
         rect.setCenter(currentPosition);
         rect.setRotation((int) Math.toDegrees(angle));
         hitbox.add(rect); // TODO fix random values
@@ -37,8 +39,8 @@ public class Laser extends Projectile implements Drawable {
     }
 
     public void draw(Graphics g) {
-        //System.out.println(getPosition());
-        g.drawImage(laserGraphics, (int) getPosition().getX(), (int) getPosition().getY(), null);
+        g.drawImage(laserGraphics, (int) (getPosition().getX() + hitboxDisplacement.getX()),
+                (int) (getPosition().getY() + hitboxDisplacement.getY()), null);
         getHitbox().draw(g);
     }
 
