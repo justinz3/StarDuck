@@ -72,8 +72,6 @@ public class MovableRectangle extends MovableShape {
         if(getRotation() % 90 == 0) // This has not been tested, may result in bugs
             return (minY() <= x && x <= maxY()) && (minX() <= y && y <= maxX());
 
-        System.out.println(getRotation());
-
         ArrayList<Vector> points = toPoints();
         Vector top, left, right, bottom;
         top = left = right = bottom = points.get(0);
@@ -87,11 +85,6 @@ public class MovableRectangle extends MovableShape {
             if(right.getX() < points.get(i).getX())
                 right = points.get(i);
         }
-
-        System.out.printf("Top: %s, Bottom: %s, Left: %s, Right: %s\n", top, bottom, left, right);
-        System.out.println((new Line(top, left)).belowLine(point) && (new Line(top, right)).belowLine(point) &&
-                (new Line(bottom, left)).aboveLine(point) && (new Line(bottom, right)).aboveLine(point));
-        System.out.println();
 
         // we do aboveLine for the top (and belowLine for the bottom) because the y-axis of graphics is inverted,
         //          so the top has lower coordinates than the bottom

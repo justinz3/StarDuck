@@ -199,12 +199,6 @@ public class GamePanel extends JPanel {
                             boolean bIsDead = a.impact(b);
                             boolean aIsDead = b.impact(a);
 
-                            if (a instanceof Projectile)
-                                objects.remove(a);
-
-                            if (b instanceof Projectile)
-                                objects.remove(b);
-
                             int deltaI = 0, deltaJ = 0;
                             if (bIsDead) {
                                 objects.remove(b);
@@ -220,6 +214,7 @@ public class GamePanel extends JPanel {
                             }
 
                             i += deltaI;
+                            j += deltaJ;
                         }
                     }
 
