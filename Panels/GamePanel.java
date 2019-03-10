@@ -20,18 +20,9 @@ public class GamePanel extends JPanel {
     private ArrayList<Player> players;
     public static ArrayList<Interactable> toBeAdded;
 
-    private JLayeredPane background;
     private Image backgroundImage;
-    private int backgroundWidth, backgroundHeight;
     private int width, height;
     private int cornerDisplacementX, cornerDisplacementY;
-
-    private MovableRectangle playLocal, playLAN;
-    private final int buttonWidth = 195, buttonHeight = 115;
-    private MouseAdapter clickAreaListener;
-
-    private final int introDuration = 13750;
-    private boolean playIntro = false; // TODO change to true
 
     private int time;
     private javax.swing.Timer timer;
