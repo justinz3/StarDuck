@@ -70,7 +70,7 @@ public class GamePanel extends JPanel {
         addPlayer(new Player(new Ship(this.getSize()), KeyInputSet.WASD, false));
         addPlayer(new Player(new Ship(new Vector(200, 200), new Vector(), new Vector(),
                 new Weapon(new Laser(new Vector(), new Vector())), Ship.ShipType.GREEN, this.getSize()),
-                KeyInputSet.ARROW_KEYS, false));
+                KeyInputSet.NUMPAD, false));
 
         running = true;
 
@@ -183,40 +183,40 @@ public class GamePanel extends JPanel {
 
 
                 // Check for Collisions
-                for(int i = 0; i < objects.size(); i++) {
-                    for(int j = 0; j < objects.size();j++) {
-                        if(i == j)
-                            continue;
+//                for(int i = 0; i < objects.size(); i++) {
+//                    for(int j = 0; j < objects.size();j++) {
+//                        if(i == j)
+//                            continue;
+//
+//                        //System.out.println(i + " " + j);
+//                        Hittable a = objects.get(i), b = objects.get(j);
+//                        if(a.getHitbox().isTouching(b.getHitbox())) {
+//                            System.out.println("IMPACT");
+//
+//                            boolean bIsDead = a.impact(b);
+//                            boolean aIsDead = b.impact(a);
+//
+//                            int deltaI = 0, deltaJ = 0;
+//                            if(bIsDead) {
+//                                objects.remove(b);
+//                                if(i > j)
+//                                    deltaI--;
+//                                deltaJ--;
+//                            }
+//                            if(aIsDead) {
+//                                objects.remove(a);
+//                                if(j > i)
+//                                    deltaJ--;
+//                                deltaI--;
+//                            }
+//
+//                            i += deltaI;
+//                            j += deltaJ;
+//                        }
+//
+//                    }
 
-                        //System.out.println(i + " " + j);
-                        Hittable a = objects.get(i), b = objects.get(j);
-                        if(a.getHitbox().isTouching(b.getHitbox())) {
-                            System.out.println("IMPACT");
-
-                            boolean bIsDead = a.impact(b);
-                            boolean aIsDead = b.impact(a);
-
-                            int deltaI = 0, deltaJ = 0;
-                            if(bIsDead) {
-                                objects.remove(b);
-                                if(i > j)
-                                    deltaI--;
-                                deltaJ--;
-                            }
-                            if(aIsDead) {
-                                objects.remove(a);
-                                if(j > i)
-                                    deltaJ--;
-                                deltaI--;
-                            }
-
-                            i += deltaI;
-                            j += deltaJ;
-                        }
-
-                    }
-
-                }
+//                }
 
             }
         }
