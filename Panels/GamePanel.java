@@ -158,6 +158,7 @@ public class GamePanel extends JPanel {
 
                 for (Player player : players) {
                     player.updateTimeSinceLastFire(delay);
+                    player.updateTimeSinceLastDamage(delay);
                 }
 
                 // Move everything and Check for projectiles outside the screen
@@ -194,8 +195,6 @@ public class GamePanel extends JPanel {
                             continue;
 
                         if (a.getHitbox().isTouching(b.getHitbox())) {
-                            System.out.println("IMPACT");
-
                             boolean bIsDead = a.impact(b);
                             boolean aIsDead = b.impact(a);
 

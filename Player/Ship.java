@@ -26,7 +26,10 @@ public class Ship extends Interactable {
     private final int initalRotation = 90; // ship starts off facing up
     private Dimension screenSize;
     private ShipType shipType;
+    private int timeSinceLastDamage;
+    private boolean invulnerable = false, drewShipLastTime = false;
 
+    private static final int INVULNERABILITY_DURATION = 1500; // In milliseconds
     public static final int MOVEMENT_SPEED = 2;
     public static final int TURNING_SPEED = 1;
 
@@ -82,12 +85,25 @@ public class Ship extends Interactable {
 
         this.shipType = shipType;
         this.screenSize = screensize;
-
+        this.timeSinceLastDamage = -1;
         updateCenter();
     }
 
     public void draw(Graphics g) {
-        g.drawImage(Helpers.rotateImage(gif, Math.toRadians(-rotation + initalRotation)), (int) position.getX(), (int) position.getY(), null);
+        if(timeSinceLastDamage >= INVULNERABILITY_DURATION && invulnerable) {
+            invulnerable = false;
+            drewShipLastTime = false;
+        }
+
+        if(invulnerable) {
+            if (!drewShipLastTime)
+                g.drawImage(Helpers.rotateImage(gif, Math.toRadians(-rotation + initalRotation)), (int) position.getX(), (int) position.getY(), null);
+
+            drewShipLastTime = !drewShipLastTime;
+        } else {
+            g.drawImage(Helpers.rotateImage(gif, Math.toRadians(-rotation + initalRotation)), (int) position.getX(), (int) position.getY(), null);
+        }
+
 
         shipType.hitbox.draw(g);
     }
@@ -164,6 +180,36 @@ public class Ship extends Interactable {
 
     public Hitbox getHitbox() {
         return shipType.hitbox;
+    }
+
+    public void updateTimeSinceLastDamage(int amount) {
+        if (timeSinceLastDamage < 0)
+            timeSinceLastDamage = amount;
+        else
+            timeSinceLastDamage += amount;
+    }
+
+    public boolean isInvulnerable() {
+        return invulnerable;
+    }
+
+    private void becomeInvulnerable() {
+        invulnerable = true;
+        drewShipLastTime = false;
+    }
+
+    @Override
+    public boolean takeDamage(double damage) {
+        if(timeSinceLastDamage >= INVULNERABILITY_DURATION) {
+            System.out.println("Took damage");
+            setHealth(getHealth() - damage);
+            timeSinceLastDamage = 0;
+
+            if(getHealth() > 0)
+                becomeInvulnerable();
+        }
+
+        return getHealth() <= 0;
     }
 
 }
