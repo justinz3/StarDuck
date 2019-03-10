@@ -20,7 +20,6 @@ public class Player implements Drawable, Movable {
         this.input = input;
         this.strafing = strafing;
         this.timeSinceLastFire = -1;
-
         velocity = new Vector(0, 0);
     }
 
@@ -141,8 +140,16 @@ public class Player implements Drawable, Movable {
             timeSinceLastFire += amount;
     }
 
+    public void updateTimeSinceLastDamage(int amount) {
+        ship.updateTimeSinceLastDamage(amount);
+    }
+
     public Hitbox getHitbox() {
         return ship.getHitbox();
+    }
+
+    public boolean isInvulnerable() {
+        return ship.isInvulnerable();
     }
 
 }

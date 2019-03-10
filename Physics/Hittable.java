@@ -50,7 +50,7 @@ public abstract class Hittable {
 
     public boolean takeDamage(double damage) {
         health -= damage;
-        return health > 0;
+        return health <= 0;
     }
 
     public int getTeam() {

@@ -68,7 +68,7 @@ public class GamePanel extends JPanel {
         objects = new ArrayList<>();
         players = new ArrayList<Player>();
         addPlayer(new Player(new Ship(Ship.ShipType.BLUE, this.getSize(), 1), KeyInputSet.WASD, false));
-        addPlayer(new Player(new Ship(new Vector(200, 200), new Vector(), new Vector(), new Weapon(new Laser(new Vector(), new Vector(), 2), 2), Ship.ShipType.GREEN, this.getSize(), 2),
+        addPlayer(new Player(new Ship(new Vector(width - 300, height - 300), new Vector(), new Vector(), new Weapon(new Laser(new Vector(), new Vector(), 2), 2), Ship.ShipType.GREEN, this.getSize(), 2),
                 KeyInputSet.NUMPAD, false));
 
         running = true;
@@ -158,6 +158,7 @@ public class GamePanel extends JPanel {
 
                 for (Player player : players) {
                     player.updateTimeSinceLastFire(delay);
+                    player.updateTimeSinceLastDamage(delay);
                 }
 
                 // Move everything and Check for projectiles outside the screen
@@ -194,8 +195,6 @@ public class GamePanel extends JPanel {
                             continue;
 
                         if (a.getHitbox().isTouching(b.getHitbox())) {
-                            System.out.println("IMPACT");
-
                             boolean bIsDead = a.impact(b);
                             boolean aIsDead = b.impact(a);
 

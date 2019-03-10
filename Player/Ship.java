@@ -26,7 +26,10 @@ public class Ship extends Interactable {
     private final int initalRotation = 90; // ship starts off facing up
     private Dimension screenSize;
     private ShipType shipType;
+    private int timeSinceLastDamage;
+    private boolean invulnerable = false, drewShipLastTime = false;
 
+    private static final int INVULNERABILITY_DURATION = 1500; // In milliseconds
     public static final int MOVEMENT_SPEED = 2;
     public static final int TURNING_SPEED = 1;
 
@@ -58,7 +61,7 @@ public class Ship extends Interactable {
         this(ShipType.BLUE, screenSize, 0);
     }
 
-    public Ship (ShipType shipType, Dimension screenSize, int team) {
+    public Ship(ShipType shipType, Dimension screenSize, int team) {
         this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Weapon(new Laser(new Vector(), new Vector(), team), team), shipType, screenSize, team);
     }
 
@@ -82,12 +85,25 @@ public class Ship extends Interactable {
 
         this.shipType = shipType;
         this.screenSize = screensize;
-
+        this.timeSinceLastDamage = -1;
         updateCenter();
     }
 
     public void draw(Graphics g) {
-        g.drawImage(Helpers.rotateImage(gif, Math.toRadians(-rotation + initalRotation)), (int) position.getX(), (int) position.getY(), null);
+        if (timeSinceLastDamage >= INVULNERABILITY_DURATION && invulnerable) {
+            invulnerable = false;
+            drewShipLastTime = false;
+        }
+
+        if (invulnerable) {
+            if (!drewShipLastTime)
+                g.drawImage(Helpers.rotateImage(gif, Math.toRadians(-rotation + initalRotation)), (int) position.getX(), (int) position.getY(), null);
+
+            drewShipLastTime = !drewShipLastTime;
+        } else {
+            g.drawImage(Helpers.rotateImage(gif, Math.toRadians(-rotation + initalRotation)), (int) position.getX(), (int) position.getY(), null);
+        }
+
 
         shipType.hitbox.draw(g);
     }
@@ -96,9 +112,9 @@ public class Ship extends Interactable {
         Vector tempPosition = new Vector(position);
         tempPosition.add(velocity);
 
-        if (tempPosition.getX() >= 0 && tempPosition.getX() <= screenSize.width - bufferedImage.getWidth())
+        if (tempPosition.getX() >= bufferedImage.getWidth() / 8 && tempPosition.getX() <= screenSize.width - 1.5 * bufferedImage.getWidth())
             position.add(new Vector(velocity.getX(), 0));
-        if (tempPosition.getY() >= 0 && tempPosition.getY() <= screenSize.height - bufferedImage.getHeight())
+        if (tempPosition.getY() >= bufferedImage.getHeight() / 8 && tempPosition.getY() <= screenSize.height - 1.5 * bufferedImage.getHeight())
             position.add(new Vector(0, velocity.getY()));
 
         velocity.add(acceleration);
@@ -164,6 +180,35 @@ public class Ship extends Interactable {
 
     public Hitbox getHitbox() {
         return shipType.hitbox;
+    }
+
+    public void updateTimeSinceLastDamage(int amount) {
+        if (timeSinceLastDamage < 0)
+            timeSinceLastDamage = amount;
+        else
+            timeSinceLastDamage += amount;
+    }
+
+    public boolean isInvulnerable() {
+        return invulnerable;
+    }
+
+    private void becomeInvulnerable() {
+        invulnerable = true;
+        drewShipLastTime = false;
+    }
+
+    @Override
+    public boolean takeDamage(double damage) {
+        if (timeSinceLastDamage >= INVULNERABILITY_DURATION) {
+            setHealth(getHealth() - damage);
+            timeSinceLastDamage = 0;
+
+            if (getHealth() > 0)
+                becomeInvulnerable();
+        }
+
+        return getHealth() <= 0;
     }
 
 }
