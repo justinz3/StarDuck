@@ -61,7 +61,7 @@ public class Ship extends Interactable {
         this(ShipType.BLUE, screenSize, 0);
     }
 
-    public Ship (ShipType shipType, Dimension screenSize, int team) {
+    public Ship(ShipType shipType, Dimension screenSize, int team) {
         this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Weapon(new Laser(new Vector(), new Vector(), team), team), shipType, screenSize, team);
     }
 
@@ -90,12 +90,12 @@ public class Ship extends Interactable {
     }
 
     public void draw(Graphics g) {
-        if(timeSinceLastDamage >= INVULNERABILITY_DURATION && invulnerable) {
+        if (timeSinceLastDamage >= INVULNERABILITY_DURATION && invulnerable) {
             invulnerable = false;
             drewShipLastTime = false;
         }
 
-        if(invulnerable) {
+        if (invulnerable) {
             if (!drewShipLastTime)
                 g.drawImage(Helpers.rotateImage(gif, Math.toRadians(-rotation + initalRotation)), (int) position.getX(), (int) position.getY(), null);
 
@@ -112,9 +112,9 @@ public class Ship extends Interactable {
         Vector tempPosition = new Vector(position);
         tempPosition.add(velocity);
 
-        if (tempPosition.getX() >= 0 && tempPosition.getX() <= screenSize.width - bufferedImage.getWidth())
+        if (tempPosition.getX() >= bufferedImage.getWidth() / 8 && tempPosition.getX() <= screenSize.width - 1.5 * bufferedImage.getWidth())
             position.add(new Vector(velocity.getX(), 0));
-        if (tempPosition.getY() >= 0 && tempPosition.getY() <= screenSize.height - bufferedImage.getHeight())
+        if (tempPosition.getY() >= bufferedImage.getHeight() / 8 && tempPosition.getY() <= screenSize.height - 1.5 * bufferedImage.getHeight())
             position.add(new Vector(0, velocity.getY()));
 
         velocity.add(acceleration);
@@ -200,12 +200,11 @@ public class Ship extends Interactable {
 
     @Override
     public boolean takeDamage(double damage) {
-        if(timeSinceLastDamage >= INVULNERABILITY_DURATION) {
-            System.out.println("Took damage");
+        if (timeSinceLastDamage >= INVULNERABILITY_DURATION) {
             setHealth(getHealth() - damage);
             timeSinceLastDamage = 0;
 
-            if(getHealth() > 0)
+            if (getHealth() > 0)
                 becomeInvulnerable();
         }
 
