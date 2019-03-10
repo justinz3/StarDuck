@@ -18,6 +18,7 @@ public class GamePanel extends JPanel {
 
     private ArrayList<Interactable> objects;
     private ArrayList<Player> players;
+    public static ArrayList<Interactable> toBeAdded;
 
     private JLayeredPane background;
     private Image backgroundImage;
@@ -65,10 +66,12 @@ public class GamePanel extends JPanel {
         this.mouseListener = new ClickListener();
         addMouseListener(mouseListener);
 
+        toBeAdded = new ArrayList<>();
         objects = new ArrayList<>();
         players = new ArrayList<Player>();
         addPlayer(new Player(new Ship(Ship.ShipType.BLUE, this.getSize(), 1), KeyInputSet.WASD, false));
-        addPlayer(new Player(new Ship(new Vector(width - 300, height - 300), new Vector(), new Vector(), new Weapon(new Laser(new Vector(), new Vector(), 2), 2), Ship.ShipType.GREEN, this.getSize(), 2),
+        addPlayer(new Player(new Ship(new Vector(width - 300, height - 300), new Vector(), new Vector(),
+                new Laser(2), new Bomb(2), Ship.ShipType.GREEN, this.getSize(), 2),
                 KeyInputSet.NUMPAD, false));
 
         running = true;
@@ -132,6 +135,20 @@ public class GamePanel extends JPanel {
                     }
                 }
 
+                // Clear destroyed objects
+                for(int i = 0; i < objects.size(); i++) {
+                    if(objects.get(i).isDead()) {
+                        objects.remove(i);
+                        i--;
+                    }
+                }
+
+                // Add created objects
+                while(toBeAdded.size() > 0) {
+                    objects.add(toBeAdded.get(0));
+                    toBeAdded.remove(0);
+                }
+
                 // Set Player movement
                 for (Player player : players) {
 
@@ -156,7 +173,13 @@ public class GamePanel extends JPanel {
                     }
 
                     if (isPressed.getOrDefault(player.input.getPrimaryShoot(), false)) {
-                        Projectile proj = player.fire();
+                        Projectile proj = player.fire(0);
+                        if (proj != null)
+                            objects.add(proj);
+                    }
+
+                    if (isPressed.getOrDefault(player.input.getSecondaryShoot(), false)) {
+                        Projectile proj = player.fire(1);
                         if (proj != null)
                             objects.add(proj);
                     }
@@ -207,14 +230,9 @@ public class GamePanel extends JPanel {
                             continue;
 
                         if (a.getHitbox().isTouching(b.getHitbox())) {
-                            System.out.println("IMPACT");
-
-                            System.out.println("Before: " + a.getHealth() + " " + b.getHealth());
 
                             boolean bIsDead = a.impact(b);
                             boolean aIsDead = b.impact(a);
-
-                            System.out.println("After: " + a.getHealth() + " " + b.getHealth());
 
                             int deltaI = 0, deltaJ = 0;
                             if (bIsDead) {
@@ -279,20 +297,20 @@ public class GamePanel extends JPanel {
     private class ClickListener implements MouseListener {
 
         public void mouseClicked(MouseEvent e) {
-            if (gameType == StarDuckControlPanel.GameType.LAN) {
-                int x = e.getX();
-                int y = e.getY();
-
-                int n = objects.size();
-                for (int i = 0; i < n; i++) {
-                    Drawable object = objects.get(i);
-                    if (object instanceof Player) {
-                        Player player = (Player) object;
-                        Projectile proj = player.getShip().fire();
-                        objects.add(proj);
-                    }
-                }
-            }
+//            if (gameType == StarDuckControlPanel.GameType.LAN) {
+//                int x = e.getX();
+//                int y = e.getY();
+//
+//                int n = objects.size();
+//                for (int i = 0; i < n; i++) {
+//                    Drawable object = objects.get(i);
+//                    if (object instanceof Player) {
+//                        Player player = (Player) object;
+//                        Projectile proj = player.getShip().fire();
+//                        objects.add(proj);
+//                    }
+//                }
+//            }
         }
 
         public void mousePressed(MouseEvent e) {

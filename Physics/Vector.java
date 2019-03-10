@@ -110,6 +110,10 @@ public class Vector {
         return new Vector(Math.cos(radians), Math.sin(radians));
     }
 
+    public boolean equals(Vector other) {
+        return Math.abs(other.getX() - getX()) < 0.001 && Math.abs(other.getY() - getY()) < 0.001;
+    }
+
 
     // mutators -----------------------------------------------------------------------------------------------------
 

@@ -14,6 +14,10 @@ public class Laser extends Projectile implements Drawable {
     private static Vector hitboxDisplacement = new Vector(-37, -40);
     private static int laserWidth = 60, laserHeight = 27;
 
+    public Laser(int team) {
+        this(new Vector(), new Vector(), team);
+    }
+
     public Laser(Vector currentPosition, Vector targetPosition, int team) {
         super(currentPosition, targetPosition, 1, 1, -1, -1, 2,  Laser.getHitbox(currentPosition, Helpers.getAngle(currentPosition, targetPosition)), team);
         double angle = Helpers.getAngle(currentPosition, targetPosition);
@@ -31,10 +35,8 @@ public class Laser extends Projectile implements Drawable {
     }
 
     public void onImpact(Hittable other) {
-        if (other instanceof Ship) {
-            Ship ship = (Ship) other;
-            ship.takeDamage(getDamage());
-        }
+
+        other.takeDamage(getDamage());
     }
 
     public void draw(Graphics g) {

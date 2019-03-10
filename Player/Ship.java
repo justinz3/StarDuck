@@ -21,7 +21,7 @@ public class Ship extends Interactable {
     private Vector position, velocity, acceleration;
     private Image gif;
     private BufferedImage bufferedImage;
-    private Weapon weapon;
+    private Weapon primary, secondary;
     private int rotation;
     private final int initalRotation = 90; // ship starts off facing up
     private Dimension screenSize;
@@ -62,18 +62,19 @@ public class Ship extends Interactable {
     }
 
     public Ship(ShipType shipType, Dimension screenSize, int team) {
-        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Weapon(new Laser(new Vector(), new Vector(), team), team), shipType, screenSize, team);
+        this(new Vector(100, 100), new Vector(0, 0), new Vector(0, 0), new Laser(team), new Bomb(team), shipType, screenSize, team);
     }
 
-    public Ship(Vector position, Vector velocity, Vector acceleration, Weapon weapon, ShipType shipType, Dimension screensize, int team) {
-        super(shipType.hitbox, 10, 1, team); // TODO vary the health, or at least put it in a final variable
+    public Ship(Vector position, Vector velocity, Vector acceleration, Projectile primary, Projectile secondary, ShipType shipType, Dimension screensize, int team) {
+        super(shipType.hitbox, 5, 2, team); // TODO vary the health, or at least put it in a final variable
 
         this.position = shipType.hitbox.getCenter(); // tie the hitbox and projectile positions together
         this.position.setX(position.getX());
         this.position.setY(position.getY());
         this.velocity = velocity;
         this.acceleration = acceleration;
-        this.weapon = weapon;
+        this.primary = new Weapon(primary, team);
+        this.secondary = new Weapon(secondary, team);
         rotation = initalRotation;
         gif = new ImageIcon(shipType.iconAddress).getImage();
         try {
@@ -133,10 +134,10 @@ public class Ship extends Interactable {
         updateCenter();
     }
 
-    public Projectile fire() {
+    public Projectile fire(int weapon) {
         Vector frontDisplacement = new Vector(0, -bufferedImage.getHeight() / 2);
         frontDisplacement.rotate(Math.toRadians(-rotation + initalRotation));
-        return weapon.fire(new Vector(getCenter().getX() + frontDisplacement.getX(), getCenter().getY() + frontDisplacement.getY()), Math.toRadians(-rotation));
+        return (weapon == 0 ? primary : secondary).fire(new Vector(getCenter().getX() + frontDisplacement.getX(), getCenter().getY() + frontDisplacement.getY()), Math.toRadians(-rotation));
     }
 
     public void turn(int degCCW) {

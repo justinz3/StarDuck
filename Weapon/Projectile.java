@@ -78,6 +78,10 @@ public abstract class Projectile extends Interactable {
         return position;
     }
 
+    public Vector getTargetPosition() {
+        return targetPosition;
+    }
+
     public double getSpeed() {
         return speed;
     }

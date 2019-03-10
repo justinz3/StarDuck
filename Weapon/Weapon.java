@@ -19,12 +19,15 @@ public class Weapon {
         if(projectile instanceof Laser) {
             return new Laser(new Vector(position), new Vector(target), team);
         }
+        if(projectile instanceof Bomb) {
+            return new Bomb(position, target, team);
+        }
         return null; //TODO
     }
 
     public Projectile fire(Vector position, double radians) {
         Vector target = new Vector(position);
-        target.add(new Vector(projectile.getSpeed(), Vector.unitVector(radians)));
+        target.add(new Vector(projectile.getSpeed() * 500, Vector.unitVector(radians)));
         return fire(position, target, team);
     }
 }

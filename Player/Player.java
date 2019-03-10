@@ -123,12 +123,12 @@ public class Player implements Drawable, Movable {
         // TODO draw more things, like health? or is that part of the ship?
     }
 
-    public Projectile fire() {
-        Projectile potentialProjectile = ship.fire();
+    public Projectile fire(int weapon) {
+        Projectile potentialProjectile = ship.fire(weapon);
         if (timeSinceLastFire >= potentialProjectile.getReload()) {
             // Allowed to shoot
             timeSinceLastFire = 0;
-            return ship.fire();
+            return ship.fire(weapon);
         }
         return null;
     }
