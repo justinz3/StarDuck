@@ -3,6 +3,7 @@
 
 package Weapon;
 
+import Panels.GamePanel;
 import Physics.*;
 
 public class Weapon {
@@ -27,7 +28,8 @@ public class Weapon {
 
     public Projectile fire(Vector position, double radians) {
         Vector target = new Vector(position);
-        target.add(new Vector(projectile.getSpeed() * 500, Vector.unitVector(radians)));
+        double fuse = projectile.getFuse();
+        target.add(new Vector(projectile.getSpeed() * (fuse > 0 ? fuse / GamePanel.refreshPeriod : 1), Vector.unitVector(radians)));
         return fire(position, target, team);
     }
 }

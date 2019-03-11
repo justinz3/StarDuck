@@ -19,6 +19,7 @@ public class GamePanel extends JPanel {
     private ArrayList<Interactable> objects;
     private ArrayList<Player> players;
     public static ArrayList<Interactable> toBeAdded;
+    public static ArrayList<Drawable> toBeDrawn;
 
     private Image backgroundImage;
     private int width, height;
@@ -26,11 +27,11 @@ public class GamePanel extends JPanel {
 
     private int time;
     private javax.swing.Timer timer;
-    private int delay = 5;
     private StarDuckControlPanel.GameType gameType;
     private StarDuckControlPanel controlPanel;
     private KeyboardListener keyListener;
     private HashMap<Integer, Boolean> isPressed;
+    public static final int refreshPeriod = 5; // milliseconds
 
     private MouseListener mouseListener;
     private boolean running;
@@ -58,6 +59,7 @@ public class GamePanel extends JPanel {
         addMouseListener(mouseListener);
 
         toBeAdded = new ArrayList<>();
+        toBeDrawn = new ArrayList<>();
         objects = new ArrayList<>();
         players = new ArrayList<Player>();
         addPlayer(new Player(new Ship(Ship.ShipType.BLUE, this.getSize(), 1), KeyInputSet.WASD, false));
@@ -80,7 +82,7 @@ public class GamePanel extends JPanel {
 
     private void initTimer() {
         time = 0;
-        timer = new javax.swing.Timer(delay, new TimerListener(delay));
+        timer = new javax.swing.Timer(refreshPeriod, new TimerListener(refreshPeriod));
         timer.start();
     }
 
@@ -97,9 +99,16 @@ public class GamePanel extends JPanel {
 
         g.drawImage(backgroundImage, cornerDisplacementX, cornerDisplacementY, this);
 
-        for (Drawable object : objects) {
+        for (Interactable object : objects) {
             object.draw(g);
         }
+//        for (Drawable object : toBeDrawn) {
+//            if(object instanceof Explosion) {
+//                ((Explosion) object).draw(g, this);
+//                continue;
+//            }
+//            object.draw(g);
+//        }
     }
 
 

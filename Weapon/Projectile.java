@@ -10,13 +10,13 @@ import java.awt.*;
 public abstract class Projectile extends Interactable {
 
     private int timeCreated;
-    private int fuse;
+    private double fuse;
     private Vector targetPosition;
     private Vector position, velocity;
     private double speed;
     private int reload;
 
-    public Projectile(Vector currentPosition, Vector targetPosition, double damage, double health, int timeCreated, int fuse, double speed, Hitbox hitbox, int team) {
+    public Projectile(Vector currentPosition, Vector targetPosition, double damage, double health, int timeCreated, double fuse, double speed, Hitbox hitbox, int team) {
         super(hitbox, 1, damage, team); // health should be 1, so that it dies upon impact
         this.timeCreated = timeCreated;
         this.fuse = fuse;
@@ -51,11 +51,15 @@ public abstract class Projectile extends Interactable {
         Vector displacement = new Vector(targetPosition);
         displacement.add(Vector.scalarMult(position, -1));
         double angle = displacement.getAngle();
-        this.velocity = new Vector(speed * Math.cos(angle), speed * Math.sin(angle));
+        this.velocity = Vector.scalarMult(Vector.unitVector(angle), speed);
     }
 
     protected void setTimeCreated(int timeCreated) {
         this.timeCreated = timeCreated;
+    }
+
+    protected void setVelocity(Vector velocity) {
+        this.velocity = velocity;
     }
 
     protected void setFuse(int fuse) {
@@ -88,5 +92,9 @@ public abstract class Projectile extends Interactable {
 
     public Vector getVelocity() {
         return velocity;
+    }
+
+    public double getFuse() {
+        return fuse;
     }
 }
