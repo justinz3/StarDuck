@@ -40,7 +40,17 @@ public class Bomb extends Projectile {
         return hitbox;
     }
 
+    private void setExploded() {
+        poison = Integer.MAX_VALUE / 100;
+        setVelocity(new Vector(0, 0));
+        exploded = true;
+        setDamage(0);
+        setHealth(Integer.MAX_VALUE);
+    }
+
     public void onImpact(Hittable other) {
+        setExploded();
+
         if(other != null) {
             other.takeDamage(getDamage());
             return;
@@ -52,20 +62,20 @@ public class Bomb extends Projectile {
             double radians = (2 * Math.PI) / numLasers * i;
 
             GamePanel.toBeAdded.add(explosion.fire(getPosition(), radians));
-//            GamePanel.toBeDrawn.add(new Explosion(getPosition()));
         }
+    }
 
-        poison = 0.01;
-        setVelocity(new Vector(0, 0));
-        exploded = true;
+    public boolean impact(Hittable other) {
+
+        boolean result = super.impact(other);
+        setExploded();
+
+        return result;
     }
 
     public void draw(Graphics g) {
-        while(
-        !g.drawImage(Helpers.rotateImage(Helpers.getImage((exploded ? "graphics/missile-explosion.gif" : "graphics/missile-countdown.gif")), angle), (int) (getPosition().getX() + hitboxDisplacement.getX()),
-                (int) (getPosition().getY() + hitboxDisplacement.getY()), null)
-        )
-            continue;
+        g.drawImage(Helpers.rotateImage(Helpers.getImage((exploded ? "graphics/missile-explosion.gif" : "graphics/missile-countdown.gif")), angle), (int) (getPosition().getX() + hitboxDisplacement.getX()),
+                (int) (getPosition().getY() + hitboxDisplacement.getY()), null);
         getHitbox().draw(g);
     }
 

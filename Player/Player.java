@@ -119,7 +119,6 @@ public class Player implements Drawable, Movable {
 
     public void draw(Graphics g) {
         ship.draw(g);
-        // TODO draw more things, like health? or is that part of the ship?
     }
 
     public Projectile fire(int weapon) {

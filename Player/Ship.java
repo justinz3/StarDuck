@@ -30,8 +30,8 @@ public class Ship extends Interactable {
     private boolean invulnerable = false, drewShipLastTime = false;
 
     private static final int INVULNERABILITY_DURATION = 1500; // In milliseconds
-    private static final int MOVEMENT_SPEED = 2;
-    private static final int TURNING_SPEED = 1;
+    static final int MOVEMENT_SPEED = 2;
+    static final int TURNING_SPEED = 1;
     private static final int SHIP_HEALTH = 5;
     private static final int SHIP_DAMAGE = 2;
 
@@ -107,6 +107,8 @@ public class Ship extends Interactable {
             g.drawImage(Helpers.rotateImage(gif, Math.toRadians(-rotation + initalRotation)), (int) position.getX(), (int) position.getY(), null);
         }
 
+        g.setColor(Color.WHITE);
+        g.drawString(String.format("Health: %.2f", getHealth()), (int) position.getX(), (int) position.getY());
 
         shipType.hitbox.draw(g);
     }
