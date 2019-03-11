@@ -99,7 +99,6 @@ public class Player implements Drawable, Movable {
         return Player.getForwardMovement(speed, rotation + 180);
     }
 
-    // TODO remove this after debugging is complete
     public Ship getShip() {
         return ship;
     }

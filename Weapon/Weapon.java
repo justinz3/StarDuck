@@ -23,7 +23,9 @@ public class Weapon {
         if(projectile instanceof Bomb) {
             return new Bomb(position, target, team);
         }
-        return null; //TODO
+
+        // We only have these two projectiles for now
+        return null;
     }
 
     public Projectile fire(Vector position, double radians) {

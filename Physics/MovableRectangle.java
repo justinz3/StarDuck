@@ -100,11 +100,9 @@ public class MovableRectangle extends MovableShape {
                 }
             }
             return false;
-//            return ((minX() <= rect.minX() && rect.minX() <= maxX()) || (rect.minX() <= minX() && minX() <= rect.maxX())) &&
-//                    ((minY() <= rect.minY() && rect.minY() <= maxY()) || (rect.minY() <= minY() && minY() <= rect.maxY()));
         }
 
-        // TODO do other shapes
+        // For now, we only use rectangles for collisions
         return false;
     }
 

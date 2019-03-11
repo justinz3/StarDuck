@@ -13,7 +13,7 @@ public enum KeyInputSet {
 
 
     private int forward, left, backward, right;
-    private int primaryShoot, secondaryShoot; // TODO allow shooting
+    private int primaryShoot, secondaryShoot;
     private boolean useMouse;
 
     KeyInputSet(int forward, int left, int backward, int right, int primaryShoot, int secondaryShoot, boolean useMouse) {

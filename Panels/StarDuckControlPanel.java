@@ -91,7 +91,8 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     }
 
     public String getInstructions() {
-        return "INSTRUCTIONS";
+        return "INSTRUCTIONS:\n Player One: use WASD to move + turn, Space to shoot a laser and Shift to shoot a bomb\n " +
+                               "Player Two: use Numpad Arrow Keys to move + turn, Numpad 0 to shoot a laser and Numpad 1 to shoot a bomb\n";
     }
 
     public String getCredits() {

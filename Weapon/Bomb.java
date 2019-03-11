@@ -36,7 +36,7 @@ public class Bomb extends Projectile {
         MovableRectangle rect = new MovableRectangle(currentPosition, bombWidth, bombHeight);
         rect.setCenter(currentPosition);
         rect.setRotation((int) Math.toDegrees(angle));
-        hitbox.add(rect); // TODO fix random values
+        hitbox.add(rect);
         return hitbox;
     }
 

@@ -1,7 +1,7 @@
 // Description: Interface for all things that are drawable
 // Created: 3/2/19
 
-package Physics; // TODO maybe find a better place for this interface?
+package Physics;
 
 import javax.swing.*;
 import java.awt.*;

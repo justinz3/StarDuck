@@ -11,7 +11,7 @@ public class Laser extends Projectile implements Drawable {
 
     private Image laserGraphics = Helpers.getImage("graphics/laser.png");
     private BufferedImage bufferedLaser = Helpers.toBufferedImage(laserGraphics);
-    private static Vector hitboxDisplacement = new Vector(-37, -40);
+    private static Vector hitboxDisplacement = new Vector(-37, -40); // TODO fix random values (find less "jank" way to do this)
     private static int laserWidth = 60, laserHeight = 27;
 
     public Laser(int team) {
@@ -30,7 +30,7 @@ public class Laser extends Projectile implements Drawable {
         MovableRectangle rect = new MovableRectangle(currentPosition, laserWidth, laserHeight);
         rect.setCenter(currentPosition);
         rect.setRotation((int) Math.toDegrees(angle));
-        hitbox.add(rect); // TODO fix random values
+        hitbox.add(rect);
         return hitbox;
     }
 

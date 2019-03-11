@@ -30,8 +30,10 @@ public class Ship extends Interactable {
     private boolean invulnerable = false, drewShipLastTime = false;
 
     private static final int INVULNERABILITY_DURATION = 1500; // In milliseconds
-    public static final int MOVEMENT_SPEED = 2;
-    public static final int TURNING_SPEED = 1;
+    private static final int MOVEMENT_SPEED = 2;
+    private static final int TURNING_SPEED = 1;
+    private static final int SHIP_HEALTH = 5;
+    private static final int SHIP_DAMAGE = 2;
 
     public enum ShipType {
         RED("graphics/Arwing-Red.gif", new MovableRectangle(new Vector(97, 120), 20, 40), new MovableRectangle(new Vector(132, 140), 90, 20)),
@@ -66,7 +68,7 @@ public class Ship extends Interactable {
     }
 
     public Ship(Vector position, Vector velocity, Vector acceleration, Projectile primary, Projectile secondary, ShipType shipType, Dimension screensize, int team) {
-        super(shipType.hitbox, 5, 2, team); // TODO vary the health, or at least put it in a final variable
+        super(shipType.hitbox, SHIP_HEALTH, SHIP_DAMAGE, team);
 
         this.position = shipType.hitbox.getCenter(); // tie the hitbox and projectile positions together
         this.position.setX(position.getX());

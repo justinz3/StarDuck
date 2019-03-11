@@ -36,12 +36,6 @@ public class Hitbox extends ArrayList<MovableShape> implements Movable {
     // TODO delete this (this is only used for debugging)
     public void draw(Graphics g) {
         for(int i = 0; i < size(); i++) {
-//            if(get(i) instanceof MovableRectangle) {
-//                MovableRectangle rect = (MovableRectangle) get(i);
-//                for(Line line : rect.toLines()) {
-//                    line.draw(g);
-//                }
-//            }
             get(i).draw(g);
         }
     }
