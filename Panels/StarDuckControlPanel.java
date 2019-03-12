@@ -152,7 +152,10 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     }
 
     public int getPoints() {
-        return Integer.parseInt(getCurrentLeader().split(": ")[1].split(" p")[0]);
+        String[] scoreText = getCurrentLeader().split(": ");
+        if(scoreText.length < 2)
+            return 0;
+        return Integer.parseInt(scoreText[1].split(" p")[0]);
     }
 
     public void linkControlPanel(ControlPanel c) {

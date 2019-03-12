@@ -268,12 +268,18 @@ public class GamePanel extends JPanel {
         removeKeyListener(keyListener);
         controlPanel.showMenu();
         running = false;
+
+        manageHighScores();
+        updateScores();
+
         objects.clear();
         players.clear();
         toBeAdded.clear();
         toBeDrawn.clear();
         playerScores.clear();
+
         manageHighScores();
+        updateScores();
     }
 
     public class KeyboardListener implements KeyListener {
@@ -391,9 +397,12 @@ public class GamePanel extends JPanel {
                 try {
                     writer = new PrintWriter(highScore);
                     writer.println(playerScore);
+                    System.out.println(playerScore);
+                    writer.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
             }
         }
     }
