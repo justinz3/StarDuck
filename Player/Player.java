@@ -118,6 +118,7 @@ public class Player implements Drawable, Movable {
     }
 
     public void draw(Graphics g) {
+
         ship.draw(g);
     }
 

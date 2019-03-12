@@ -41,7 +41,7 @@ public class Bomb extends Projectile {
     }
 
     private void setExploded() {
-        poison = Integer.MAX_VALUE / 100;
+        poison = Integer.MAX_VALUE / 10;
         setVelocity(new Vector(0, 0));
         exploded = true;
         setDamage(0);
