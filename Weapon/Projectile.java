@@ -3,7 +3,9 @@
 
 package Weapon;
 
+import Helpers.Helpers;
 import Physics.*;
+import Player.Ship;
 
 import java.awt.*;
 
@@ -32,6 +34,19 @@ public abstract class Projectile extends Interactable {
     }
 
     public abstract void onImpact(Hittable other); // what the projectile does when it hits something
+
+    @Override
+    public boolean impact(Hittable other) {
+        boolean killedTarget = super.impact(other);
+
+        if (other instanceof Ship) {
+            Helpers.addPoints(getTeam(), 10 * getDamage()); // 10 points per damage dealt
+            if (killedTarget)
+                Helpers.addPoints(getTeam(), 5); // 5 bonus points for killing target
+        }
+
+        return killedTarget;
+    }
 
     public abstract void draw(Graphics g);
 

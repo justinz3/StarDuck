@@ -150,4 +150,11 @@ public class Player implements Drawable, Movable {
         return ship.isInvulnerable();
     }
 
+    public int getTeam() {
+        return ship.getTeam();
+    }
+
+    public String getShipColor() {
+        return ship.getColor();
+    }
 }

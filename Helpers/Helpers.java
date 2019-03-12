@@ -1,5 +1,7 @@
 package Helpers;
 
+import Panels.GamePanel;
+import Panels.GameStats;
 import Physics.Vector;
 
 import javax.swing.*;
@@ -10,21 +12,22 @@ import java.awt.image.BufferedImage;
 
 public class Helpers {
 
+    private static GamePanel gamePanel;
+
     public static Image getImage(String fileAddress) {
         return new ImageIcon(fileAddress).getImage();
     }
 
     // Copied from: https://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage
+
     /**
      * Converts a given Image into a BufferedImage
      *
      * @param img The Image to be converted
      * @return The converted BufferedImage
      */
-    public static BufferedImage toBufferedImage(Image img)
-    {
-        if (img instanceof BufferedImage)
-        {
+    public static BufferedImage toBufferedImage(Image img) {
+        if (img instanceof BufferedImage) {
             return (BufferedImage) img;
         }
 
@@ -60,5 +63,14 @@ public class Helpers {
         Vector displacement = new Vector(targetPosition);
         displacement.add(Vector.scalarMult(currentPosition, -1));
         return Math.atan2(displacement.getY(), displacement.getX());
+    }
+
+    public static void linkGamePanel(GamePanel gamePanel) {
+        Helpers.gamePanel = gamePanel;
+    }
+
+    public static void addPoints(int team, double points) {
+        GamePanel.playerScores.set(team, GamePanel.playerScores.get(team) + points);
+        gamePanel.updateScores();
     }
 }

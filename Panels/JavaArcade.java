@@ -45,5 +45,8 @@ public interface JavaArcade {
   /* This method should return the current players number of points */
   
   public int getPoints(); //add to spec
+
+  // Returns who is currently winning
+  public String getCurrentLeader();
     
 }

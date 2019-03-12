@@ -3,6 +3,7 @@
 
 package Player;
 
+import Panels.GamePanel;
 import Physics.*;
 import Physics.MovableRectangle;
 import Physics.MovableShape;
@@ -52,6 +53,10 @@ public class Ship extends Interactable {
             this.originalHitbox = new Hitbox();
             originalHitbox.add(new MovableRectangle((MovableRectangle) rect1));
             originalHitbox.add(new MovableRectangle((MovableRectangle) rect2));
+        }
+
+        public String toString() {
+            return Character.toString(name().charAt(0)).toUpperCase() + name().substring(1).toLowerCase();
         }
     }
 
@@ -215,6 +220,8 @@ public class Ship extends Interactable {
             setHealth(getHealth() - damage);
             timeSinceLastDamage = 0;
 
+            Helpers.addPoints(getTeam(), -5);
+
             if (getHealth() > 0)
                 becomeInvulnerable();
         }
@@ -222,4 +229,7 @@ public class Ship extends Interactable {
         return getHealth() <= 0;
     }
 
+    public String getColor() {
+        return shipType.toString();
+    }
 }

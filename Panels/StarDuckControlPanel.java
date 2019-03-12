@@ -1,8 +1,13 @@
 package Panels;
 
+import Helpers.Helpers;
+
 import javax.naming.ldap.Control;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class StarDuckControlPanel extends JPanel implements JavaArcade {
 
@@ -12,6 +17,7 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     private GamePanel gamePanel;
     private CardLayout cardLayout;
     private ControlPanel controlPanel;
+    private GameStats gameStats;
 
     public enum GameType {
         LOCAL,
@@ -50,6 +56,7 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
 
     public void startGame(GameType gameType) {
         this.gamePanel = new GamePanel(1572, 912, gameType, this);
+        Helpers.linkGamePanel(gamePanel);
         parent.setSize(1572, 944);
 //        this.gamePanel = new GamePanel(786, 456, gameType, this);
 //        parent.setSize(786, 488);
@@ -83,7 +90,7 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     public void pauseGame() {
         if (currentlyVisible == PanelType.GAME) {
             gamePanel.togglePause();
-            if(gamePanel.isRunning())
+            if (gamePanel.isRunning())
                 controlPanel.enableStopButton();
             else
                 controlPanel.disableStopButton();
@@ -100,19 +107,63 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     }
 
     public String getHighScore() {
-        return "0";
+        File highScore = new File("HighScore.txt");
+        int score = Integer.MIN_VALUE;
+
+        if (highScore.exists()) {
+            Scanner scanner;
+            try {
+                scanner = new Scanner(highScore);
+                score = scanner.nextInt();
+                scanner.close();
+            } catch (IOException e) {
+                // Do nothing
+            }
+        }
+
+        if (score == Integer.MIN_VALUE)
+            return "None";
+        else
+            return score + " points";
+    }
+
+    public String getCurrentLeader() {
+        double currentMax = Integer.MIN_VALUE;
+        String currentLeader = "None";
+        for (int i = 0; i < GamePanel.playerScores.size(); i++) {
+            double score = GamePanel.playerScores.get(i);
+            if (score > currentMax) {
+                currentMax = score;
+                currentLeader = GamePanel.getColorByTeam(i);
+            }
+        }
+
+        if (currentMax == Integer.MIN_VALUE)
+            return "None";
+        else
+            return currentLeader + ": " + currentMax + " points";
     }
 
     public void stopGame() {
-        if (currentlyVisible == PanelType.GAME)
+        if (currentlyVisible == PanelType.GAME) {
             gamePanel.endGame();
+            Helpers.linkGamePanel(null);
+        }
     }
 
     public int getPoints() {
-        return 0;
+        return Integer.parseInt(getCurrentLeader().split(": ")[1].split(" p")[0]);
     }
 
     public void linkControlPanel(ControlPanel c) {
         this.controlPanel = c;
+    }
+
+    public void linkGameStats(GameStats gameStats) {
+        this.gameStats = gameStats;
+    }
+
+    public void updateStats() {
+        gameStats.update();
     }
 }

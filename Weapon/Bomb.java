@@ -28,7 +28,7 @@ public class Bomb extends Projectile {
     public Bomb(Vector currentPosition, Vector targetPosition, int team) {
         super(currentPosition, targetPosition, 3, 1, -1, 3700, 1,  Bomb.getHitbox(currentPosition, Helpers.getAngle(currentPosition, targetPosition)), team);
         angle = Helpers.getAngle(currentPosition, targetPosition);
-        this.setReload(5000);
+        this.setReload(3000);
     }
 
     private static Hitbox getHitbox(Vector currentPosition, double angle) {

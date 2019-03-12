@@ -11,12 +11,11 @@ public class Arcade extends JFrame {
         super("AP Java Arcade");
 
         JavaArcade game = new StarDuckControlPanel(this);
-
         GameStats display = new GameStats(game); //passing in a JavaArcade, therefore I know I can call getHighScore(), getScore()
-
 
         ControlPanel controls = new ControlPanel(game, display); //Also passing in JavaArcade to ControlPanel, I know you will respond to buttons
         ((StarDuckControlPanel) game).linkControlPanel(controls);
+        ((StarDuckControlPanel) game).linkGameStats(display);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());

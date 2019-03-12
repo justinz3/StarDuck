@@ -12,14 +12,18 @@ import Helpers.*;
 import java.awt.event.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class GamePanel extends JPanel {
 
     private ArrayList<Interactable> objects;
-    private ArrayList<Player> players;
+    private static ArrayList<Player> players;
     public static ArrayList<Interactable> toBeAdded;
     public static ArrayList<Drawable> toBeDrawn;
+    public static ArrayList<Double> playerScores = new ArrayList<>();
 
     private Image backgroundImage;
     private int width, height;
@@ -62,9 +66,9 @@ public class GamePanel extends JPanel {
         toBeDrawn = new ArrayList<>();
         objects = new ArrayList<>();
         players = new ArrayList<Player>();
-        addPlayer(new Player(new Ship(Ship.ShipType.BLUE, this.getSize(), 1), KeyInputSet.WASD, false));
+        addPlayer(new Player(new Ship(Ship.ShipType.BLUE, this.getSize(), 0), KeyInputSet.WASD, false));
         addPlayer(new Player(new Ship(new Vector(width - 300, height - 300), new Vector(), new Vector(),
-                new Laser(2), new Bomb(2), Ship.ShipType.GREEN, this.getSize(), 2),
+                new Laser(2), new Bomb(2), Ship.ShipType.GREEN, this.getSize(), 1),
                 KeyInputSet.NUMPAD, false));
 
         running = true;
@@ -89,6 +93,7 @@ public class GamePanel extends JPanel {
     private void addPlayer(Player player) {
         players.add(player);
         objects.add(player.getShip());
+        playerScores.add(0.0);
     }
 
     // ---------------------------------------------------------
@@ -128,30 +133,29 @@ public class GamePanel extends JPanel {
                 time += delay;
 
                 // Clear dead players
-                for(int i = 0; i < players.size(); i++) {
-                    if(players.get(i).getShip().isDead()) {
+                for (int i = 0; i < players.size(); i++) {
+                    if (players.get(i).getShip().isDead()) {
                         players.remove(players.get(i));
                         i--;
                     }
                 }
 
                 // Clear destroyed objects
-                for(int i = 0; i < objects.size(); i++) {
-                    if(objects.get(i).isDead()) {
+                for (int i = 0; i < objects.size(); i++) {
+                    if (objects.get(i).isDead()) {
                         objects.remove(i);
                         i--;
                     }
                 }
 
                 // Add created objects
-                while(toBeAdded.size() > 0) {
+                while (toBeAdded.size() > 0) {
                     objects.add(toBeAdded.get(0));
                     toBeAdded.remove(0);
                 }
 
                 // Set Player movement
                 for (Player player : players) {
-
                     if (isPressed.getOrDefault(player.input.getForward(), false))
                         player.moveForward();
                     else if (isPressed.getOrDefault(player.input.getBackward(), false))
@@ -218,9 +222,9 @@ public class GamePanel extends JPanel {
                     for (int j = 0; j < objects.size(); j++) {
                         if (i == j)
                             continue;
-                        if(i < 0)
+                        if (i < 0)
                             break;
-                        if(j < 0)
+                        if (j < 0)
                             continue;
 
                         //System.out.println(i + " " + j);
@@ -264,6 +268,12 @@ public class GamePanel extends JPanel {
         removeKeyListener(keyListener);
         controlPanel.showMenu();
         running = false;
+        objects.clear();
+        players.clear();
+        toBeAdded.clear();
+        toBeDrawn.clear();
+        playerScores.clear();
+        manageHighScores();
     }
 
     public class KeyboardListener implements KeyListener {
@@ -358,5 +368,41 @@ public class GamePanel extends JPanel {
         for (Player player : players) {
             player.setVelocity(new Vector(0, 0));
         }
+    }
+
+    private void manageHighScores() {
+        File highScore = new File("HighScore.txt");
+        int previousHighScore = Integer.MIN_VALUE;
+
+        if (highScore.exists()) {
+            Scanner scanner;
+            try {
+                scanner = new Scanner(highScore);
+                previousHighScore = scanner.nextInt();
+                scanner.close();
+            } catch (IOException e) {
+                // Do nothing
+            }
+        }
+        for (Player player : players) {
+            int playerScore = (int) (playerScores.get(player.getTeam()) + 0.5);
+            if (playerScore > previousHighScore) {
+                PrintWriter writer;
+                try {
+                    writer = new PrintWriter(highScore);
+                    writer.println(playerScore);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static String getColorByTeam(int team) {
+        return players.get(team).getShipColor();
+    }
+
+    public void updateScores() {
+        controlPanel.updateStats();
     }
 }
