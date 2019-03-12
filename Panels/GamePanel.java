@@ -8,6 +8,7 @@ import Physics.Vector;
 import Player.*;
 import Weapon.*;
 import Helpers.*;
+import network.*;
 
 import java.awt.event.*;
 import java.awt.event.KeyListener;
@@ -38,7 +39,15 @@ public class GamePanel extends JPanel {
     public static final int refreshPeriod = 5; // milliseconds
 
     private MouseListener mouseListener;
-    private boolean running;
+    private boolean running, killEarly;
+    private LANRole gameRole;
+    private LANServer server;
+    private LANClient client;
+
+    private enum LANRole {
+        HOST,
+        CLIENT
+    }
 
     public GamePanel(int width, int height, StarDuckControlPanel.GameType gameType, StarDuckControlPanel controlPanel) {
         this.setFocusable(true);
@@ -66,10 +75,26 @@ public class GamePanel extends JPanel {
         toBeDrawn = new ArrayList<>();
         objects = new ArrayList<>();
         players = new ArrayList<Player>();
-        addPlayer(new Player(new Ship(Ship.ShipType.BLUE, this.getSize(), 0), KeyInputSet.WASD, false));
-        addPlayer(new Player(new Ship(new Vector(width - 300, height - 300), new Vector(), new Vector(),
-                new Laser(2), new Bomb(2), Ship.ShipType.GREEN, this.getSize(), 1),
-                KeyInputSet.NUMPAD, false));
+        if (gameType == StarDuckControlPanel.GameType.LOCAL) {
+            addPlayer(new Player(new Ship(Ship.ShipType.BLUE, this.getSize(), 0), KeyInputSet.WASD, false));
+            addPlayer(new Player(new Ship(new Vector(width - 300, height - 300), new Vector(), new Vector(),
+                    new Laser(2), new Bomb(2), Ship.ShipType.GREEN, this.getSize(), 1),
+                    KeyInputSet.NUMPAD, false));
+        } else {
+            int role;
+            Object[] options = {"Server Host", "Server Client", "Quit"};
+            while (true) {
+                role = JOptionPane.showOptionDialog(null, "What is your role in this game?", "Define role", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, null);
+                if (role == JOptionPane.CLOSED_OPTION)
+                    JOptionPane.showMessageDialog(null, "Sorry, but you have to choose an option!\nIf you clicked LAN by mistake, click quit!", "Uh oh!", JOptionPane.ERROR_MESSAGE);
+                else if (role == JOptionPane.CANCEL_OPTION)
+                    System.exit(-1);
+                else
+                    break;
+            }
+
+            gameRole = (role == JOptionPane.YES_OPTION) ? LANRole.HOST : LANRole.CLIENT;
+        }
 
         running = true;
 
