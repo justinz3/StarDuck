@@ -205,6 +205,10 @@ public class Ship extends Interactable {
             timeSinceLastDamage += amount;
     }
 
+    public int getTimeSinceLastDamage() {
+        return timeSinceLastDamage;
+    }
+
     public boolean isInvulnerable() {
         return invulnerable;
     }

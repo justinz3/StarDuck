@@ -44,6 +44,6 @@ public class GameStats extends JPanel {
     }
 
     public void update() {
-        yourScoreText = new JLabel(" Current Winner: " + game.getCurrentLeader());
+        yourScoreText.setText(" Current Leader: " + game.getCurrentLeader());
     }
 }

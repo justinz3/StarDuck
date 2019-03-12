@@ -39,7 +39,7 @@ public abstract class Projectile extends Interactable {
     public boolean impact(Hittable other) {
         boolean killedTarget = super.impact(other);
 
-        if (other instanceof Ship) {
+        if (other instanceof Ship && (!((Ship) other).isInvulnerable() || ((Ship) other).getTimeSinceLastDamage() == 0)) {
             Helpers.addPoints(getTeam(), 10 * getDamage()); // 10 points per damage dealt
             if (killedTarget)
                 Helpers.addPoints(getTeam(), 5); // 5 bonus points for killing target
