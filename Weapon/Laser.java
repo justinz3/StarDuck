@@ -42,7 +42,6 @@ public class Laser extends Projectile implements Drawable {
     public void draw(Graphics g) {
         g.drawImage(laserGraphics, (int) (getPosition().getX() + hitboxDisplacement.getX()),
                 (int) (getPosition().getY() + hitboxDisplacement.getY()), null);
-        getHitbox().draw(g);
     }
 
     public Dimension getImageSize() {

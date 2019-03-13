@@ -28,7 +28,7 @@ public class Bomb extends Projectile {
     public Bomb(Vector currentPosition, Vector targetPosition, int team) {
         super(currentPosition, targetPosition, 3, 1, -1, 3700, 1,  Bomb.getHitbox(currentPosition, Helpers.getAngle(currentPosition, targetPosition)), team);
         angle = Helpers.getAngle(currentPosition, targetPosition);
-        this.setReload(500);
+        this.setReload(2500);
     }
 
     private static Hitbox getHitbox(Vector currentPosition, double angle) {
@@ -78,7 +78,6 @@ public class Bomb extends Projectile {
     public void draw(Graphics g) {
         g.drawImage(Helpers.rotateImage(Helpers.getImage((exploded ? "graphics/missile-explosion.gif" : "graphics/missile-countdown.gif")), angle), (int) (getPosition().getX() + hitboxDisplacement.getX()),
                 (int) (getPosition().getY() + hitboxDisplacement.getY()), null);
-        getHitbox().draw(g);
     }
 
     public Dimension getImageSize() {

@@ -99,12 +99,15 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     }
 
     public String getInstructions() {
-        return "INSTRUCTIONS:\n Player One: use WASD to move + turn, Space to shoot a laser and Shift to shoot a bomb\n " +
-                "Player Two: use Numpad Arrow Keys to move + turn, Numpad 0 to shoot a laser and Numpad 1 to shoot a bomb\n";
+        return "INSTRUCTIONS:\n\nLOCAL GAME: \nPlayer One (Blue): use WASD to move + turn, Space to shoot a laser and Shift to shoot a bomb\n " +
+                "Player Two (Green): use Numpad Arrow Keys to move + turn, Numpad 0 to shoot a laser and Numpad 1 to shoot a bomb\n\nLAN Game:\n" +
+                "Use WASD to move + turn, Space to shoot a laser, and Shift to fire a bomb (you are always the blue ship).";
     }
 
     public String getCredits() {
-        return "CREDITS: Dan and Justin";
+        return "CREDITS:\n" +
+                "\u00a9 2019 BA Games (Daniel Ivanovich and Justin Zhu)\n" +
+                "Visit this project on GitHub at http://bit.ly/StarDuck";
     }
 
     public String getHighScore() {

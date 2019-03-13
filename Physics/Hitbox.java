@@ -33,13 +33,6 @@ public class Hitbox extends ArrayList<MovableShape> implements Movable {
         return false;
     }
 
-    // TODO delete this (this is only used for debugging)
-    public void draw(Graphics g) {
-        for(int i = 0; i < size(); i++) {
-            get(i).draw(g);
-        }
-    }
-
     public void move() {
         for(int i = 0; i < size(); i++) {
             get(i).move();

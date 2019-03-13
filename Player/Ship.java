@@ -115,8 +115,6 @@ public class Ship extends Interactable {
         g.setColor(Color.WHITE);
         g.drawString(String.format("%.0f HP", getHealth()), (int) position.getX(), (int) position.getY());
         g.drawString(String.format("%.0f Pts", GamePanel.playerScores.get(getTeam())), (int) (position.getX()), (int) (position.getY() + getHeight()));
-
-        shipType.hitbox.draw(g);
     }
 
     public void move() {
