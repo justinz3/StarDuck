@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 
 public class Bomb extends Projectile {
 
-    private BufferedImage bufferedBomb = Helpers.toBufferedImage(Helpers.getImage("graphics/missile-countdown.gif"));
+    private BufferedImage bufferedBomb = Helpers.toBufferedImage(Helpers.getImage("graphics/missile.gif"));
     private static Vector hitboxDisplacement = new Vector(-60, -40);
     private static int bombWidth = 50, bombHeight = 35;
     private static int numLasers = 8;
@@ -26,7 +26,7 @@ public class Bomb extends Projectile {
     }
 
     public Bomb(Vector currentPosition, Vector targetPosition, int team) {
-        super(currentPosition, targetPosition, 3, 1, -1, 3700, 1,  Bomb.getHitbox(currentPosition, Helpers.getAngle(currentPosition, targetPosition)), team);
+        super(currentPosition, targetPosition, 3, 1, -1, 3000, 1,  Bomb.getHitbox(currentPosition, Helpers.getAngle(currentPosition, targetPosition)), team);
         angle = Helpers.getAngle(currentPosition, targetPosition);
         this.setReload(2500);
     }
@@ -76,7 +76,7 @@ public class Bomb extends Projectile {
     }
 
     public void draw(Graphics g) {
-        g.drawImage(Helpers.rotateImage(Helpers.getImage((exploded ? "graphics/missile-explosion.gif" : "graphics/missile-countdown.gif")), angle), (int) (getPosition().getX() + hitboxDisplacement.getX()),
+        g.drawImage(Helpers.rotateImage(Helpers.getImage((exploded ? "graphics/missile-explosion.gif" : "graphics/missile.gif")), angle), (int) (getPosition().getX() + hitboxDisplacement.getX()),
                 (int) (getPosition().getY() + hitboxDisplacement.getY()), null);
     }
 
