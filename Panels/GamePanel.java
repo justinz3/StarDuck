@@ -39,7 +39,7 @@ public class GamePanel extends JPanel {
     public static final int refreshPeriod = 5; // milliseconds
 
     private MouseListener mouseListener;
-    private boolean running, killEarly;
+    private boolean running, serverReady = false;
     private LANRole gameRole;
     private LANServer server;
     private LANClient client;
@@ -94,6 +94,45 @@ public class GamePanel extends JPanel {
             }
 
             gameRole = (role == JOptionPane.YES_OPTION) ? LANRole.HOST : LANRole.CLIENT;
+
+            if (gameRole == LANRole.HOST) {
+                addPlayer(new Player(new Ship(Ship.ShipType.BLUE, this.getSize(), 0), KeyInputSet.WASD, false));
+                addPlayer(new Player(new Ship(new Vector(width - 300, height - 300), new Vector(), new Vector(),
+                        new Laser(2), new Bomb(2), Ship.ShipType.RED, this.getSize(), 1),
+                        null, false));
+                server = new LANServer();
+                try {
+                    server.start(6666);
+                    server.checkConnection();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Unable to create server!\nExiting...", "Uh oh!", JOptionPane.ERROR_MESSAGE);
+                    System.exit(-1);
+                }
+
+                serverReady = true;
+            } else {
+                addPlayer(new Player(new Ship(Ship.ShipType.RED, this.getSize(), 0), null, false));
+                addPlayer(new Player(new Ship(new Vector(width - 300, height - 300), new Vector(), new Vector(),
+                        new Laser(2), new Bomb(2), Ship.ShipType.BLUE, this.getSize(), 1),
+                        KeyInputSet.WASD, false));
+
+                String ip, localhost = "127.0.0.1";
+                ip = JOptionPane.showInputDialog(null, "Please enter the IP of the server (leave blank for localhost)", "Connect to a game", JOptionPane.QUESTION_MESSAGE);
+                if (ip == null || ip.length() < 7 || ip.length() > 45) {
+                    JOptionPane.showMessageDialog(null, "IP entered was either too short, too long, or blank...\nConnecting to localhost...", "Uh oh!", JOptionPane.ERROR_MESSAGE);
+                    ip = localhost;
+                }
+                client = new LANClient();
+                try {
+                    client.startConnection(ip, 6666);
+                    client.checkConnection();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Unable to open connection at " + ip + ":6666!\nExiting...", "Uh oh!", JOptionPane.ERROR_MESSAGE);
+                    System.exit(-1);
+                }
+
+                serverReady = true;
+            }
         }
 
         running = true;
@@ -154,143 +193,174 @@ public class GamePanel extends JPanel {
         }
 
         public void actionPerformed(ActionEvent e) {
-            if (isRunning()) {
-                time += delay;
-
-                // Clear dead players
-                for (int i = 0; i < players.size(); i++) {
-                    if (players.get(i).getShip().isDead()) {
-                        players.remove(players.get(i));
-                        i--;
-                    }
+            try {
+                int localTeam = gameRole == LANRole.HOST ? 0 : 1, awayTeam = 1 - localTeam;
+                if (gameType == StarDuckControlPanel.GameType.LAN) {
+                    if(!serverReady)
+                        return;
+                    else if (gameRole == LANRole.HOST)
+                        server.sendKeyboardStatus(isPressed, players.get(localTeam).input);
+                    else
+                        client.sendKeyboardStatus(isPressed, players.get(localTeam).input);
                 }
 
-                // Clear destroyed objects
-                for (int i = 0; i < objects.size(); i++) {
-                    if (objects.get(i).isDead()) {
-                        objects.remove(i);
-                        i--;
-                    }
-                }
+                if (isRunning()) {
+                    time += delay;
 
-                // Add created objects
-                while (toBeAdded.size() > 0) {
-                    objects.add(toBeAdded.get(0));
-                    toBeAdded.remove(0);
-                }
-
-                // Set Player movement
-                for (Player player : players) {
-                    if (isPressed.getOrDefault(player.input.getForward(), false))
-                        player.moveForward();
-                    else if (isPressed.getOrDefault(player.input.getBackward(), false))
-                        player.moveBackward();
-                    else {
-                        player.zeroVelocity();
-                    }
-
-                    if (isPressed.getOrDefault(player.input.getLeft(), false)) {
-                        if (player.isStrafing())
-                            player.strafeLeft();
-                        else
-                            player.turnLeft();
-                    } else if (isPressed.getOrDefault(player.input.getRight(), false)) {
-                        if (player.isStrafing())
-                            player.strafeRight();
-                        else
-                            player.turnRight();
-                    }
-
-                    if (isPressed.getOrDefault(player.input.getPrimaryShoot(), false)) {
-                        Projectile proj = player.fire(0);
-                        if (proj != null)
-                            objects.add(proj);
-                    }
-
-                    if (isPressed.getOrDefault(player.input.getSecondaryShoot(), false)) {
-                        Projectile proj = player.fire(1);
-                        if (proj != null)
-                            objects.add(proj);
-                    }
-
-                    player.move();
-                }
-
-                for (Player player : players) {
-                    player.updateTimeSinceLastFire(delay);
-                    player.updateTimeSinceLastDamage(delay);
-                }
-
-                // Move everything and Check for projectiles outside the screen
-                ArrayList<Interactable> objectsToRemove = new ArrayList<>();
-                for (Interactable object : objects) {
-                    object.move();
-
-                    if (object instanceof Projectile) {
-                        Projectile projectile = (Projectile) object;
-                        Vector position = projectile.getPosition();
-                        Dimension size = projectile.getImageSize();
-
-                        if (position.getX() <= -1 * size.getWidth() || position.getY() <= -1 * size.getHeight() ||
-                                position.getX() >= getWidth() + size.getWidth() || position.getY() >= getHeight() + size.getHeight())
-                            objectsToRemove.add(object);
-                    }
-                }
-
-                // Avoids ConcurrentModificationExceptions
-                for (Interactable object : objectsToRemove)
-                    objects.remove(object);
-
-
-                // Check for Collisions
-                for (int i = 0; i < objects.size(); i++) {
-                    for (int j = 0; j < objects.size(); j++) {
-                        if (i == j)
-                            continue;
-                        if (i < 0)
-                            break;
-                        if (j < 0)
-                            continue;
-
-                        //System.out.println(i + " " + j);
-                        Hittable a = objects.get(i), b = objects.get(j);
-
-                        if (a.getTeam() == b.getTeam())
-                            continue;
-
-                        if (a.getHitbox().isTouching(b.getHitbox())) {
-
-                            boolean bIsDead = a.impact(b);
-                            boolean aIsDead = b.impact(a);
-
-                            int deltaI = 0, deltaJ = 0;
-                            if (bIsDead) {
-                                objects.remove(b);
-                                if (i > j)
-                                    deltaI--;
-                                deltaJ--;
-                            }
-                            if (aIsDead) {
-                                objects.remove(a);
-                                if (j > i)
-                                    deltaJ--;
-                                deltaI--;
-                            }
-
-                            i += deltaI;
-                            j += deltaJ;
+                    // Clear dead players
+                    for (int i = 0; i < players.size(); i++) {
+                        if (players.get(i).getShip().isDead()) {
+                            players.remove(players.get(i));
+                            i--;
                         }
                     }
 
+                    // Clear destroyed objects
+                    for (int i = 0; i < objects.size(); i++) {
+                        if (objects.get(i).isDead()) {
+                            objects.remove(i);
+                            i--;
+                        }
+                    }
+
+                    // Add created objects
+                    while (toBeAdded.size() > 0) {
+                        objects.add(toBeAdded.get(0));
+                        toBeAdded.remove(0);
+                    }
+
+                    // Set Player movement
+                    for (Player player : players) {
+
+                        if (gameType == StarDuckControlPanel.GameType.LOCAL || player.getTeam() == localTeam) {
+                            movePlayerFromMap(player);
+                        } else {
+                            // Away team player
+                            boolean[] keyboardStatus = gameRole == LANRole.HOST ? server.getKeyboardStatus() : client.getKeyboardStatus();
+                            if (keyboardStatus[0])
+                                player.moveForward();
+                            else if (keyboardStatus[2])
+                                player.moveBackward();
+                            else {
+                                player.zeroVelocity();
+                            }
+
+                            if (keyboardStatus[1]) {
+                                if (player.isStrafing())
+                                    player.strafeLeft();
+                                else
+                                    player.turnLeft();
+                            } else if (keyboardStatus[3]) {
+                                if (player.isStrafing())
+                                    player.strafeRight();
+                                else
+                                    player.turnRight();
+                            }
+
+                            if (keyboardStatus[4]) {
+                                Projectile proj = player.fire(0);
+                                if (proj != null)
+                                    objects.add(proj);
+                            }
+
+                            if (keyboardStatus[5]) {
+                                Projectile proj = player.fire(1);
+                                if (proj != null)
+                                    objects.add(proj);
+                            }
+                        }
+
+                        player.move();
+
+                        player.updateTimeSinceLastFire(delay);
+                        player.updateTimeSinceLastDamage(delay);
+                    }
+
+                    // Move everything and Check for projectiles outside the screen
+                    ArrayList<Interactable> objectsToRemove = new ArrayList<>();
+                    for (Interactable object : objects) {
+                        object.move();
+
+                        if (object instanceof Projectile) {
+                            Projectile projectile = (Projectile) object;
+                            Vector position = projectile.getPosition();
+                            Dimension size = projectile.getImageSize();
+
+                            if (position.getX() <= -1 * size.getWidth() || position.getY() <= -1 * size.getHeight() ||
+                                    position.getX() >= getWidth() + size.getWidth() || position.getY() >= getHeight() + size.getHeight())
+                                objectsToRemove.add(object);
+                        }
+                    }
+
+                    // Avoids ConcurrentModificationExceptions
+                    for (Interactable object : objectsToRemove)
+                        objects.remove(object);
+
+
+                    // Check for Collisions
+                    for (int i = 0; i < objects.size(); i++) {
+                        for (int j = 0; j < objects.size(); j++) {
+                            if (i == j)
+                                continue;
+                            if (i < 0)
+                                break;
+                            if (j < 0)
+                                continue;
+
+                            //System.out.println(i + " " + j);
+                            Hittable a = objects.get(i), b = objects.get(j);
+
+                            if (a.getTeam() == b.getTeam())
+                                continue;
+
+                            if (a.getHitbox().isTouching(b.getHitbox())) {
+
+                                boolean bIsDead = a.impact(b);
+                                boolean aIsDead = b.impact(a);
+
+                                int deltaI = 0, deltaJ = 0;
+                                if (bIsDead) {
+                                    objects.remove(b);
+                                    if (i > j)
+                                        deltaI--;
+                                    deltaJ--;
+                                }
+                                if (aIsDead) {
+                                    objects.remove(a);
+                                    if (j > i)
+                                        deltaJ--;
+                                    deltaI--;
+                                }
+
+                                i += deltaI;
+                                j += deltaJ;
+                            }
+                        }
+
+                    }
+
                 }
 
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error communicating between server and client!\nExiting...", "Uh oh!", JOptionPane.ERROR_MESSAGE);
+                endGame();
             }
-
         }
     }
 
     public void endGame() {
+        try {
+            if (gameRole == LANRole.HOST)
+                server.stop();
+            else
+                client.stopConnection();
+        } catch (Exception e) {
+            System.out.println("Error disconnecting...");
+        }
         removeKeyListener(keyListener);
+
+        JOptionPane.showMessageDialog(null, JavaArcade.getCurrentLeader(), "The Winner!", JOptionPane.PLAIN_MESSAGE);
+
         controlPanel.showMenu();
         running = false;
 
@@ -437,5 +507,39 @@ public class GamePanel extends JPanel {
 
     public void updateScores() {
         controlPanel.updateStats();
+    }
+
+    private void movePlayerFromMap(Player player) {
+        if (isPressed.getOrDefault(player.input.getForward(), false))
+            player.moveForward();
+        else if (isPressed.getOrDefault(player.input.getBackward(), false))
+            player.moveBackward();
+        else {
+            player.zeroVelocity();
+        }
+
+        if (isPressed.getOrDefault(player.input.getLeft(), false)) {
+            if (player.isStrafing())
+                player.strafeLeft();
+            else
+                player.turnLeft();
+        } else if (isPressed.getOrDefault(player.input.getRight(), false)) {
+            if (player.isStrafing())
+                player.strafeRight();
+            else
+                player.turnRight();
+        }
+
+        if (isPressed.getOrDefault(player.input.getPrimaryShoot(), false)) {
+            Projectile proj = player.fire(0);
+            if (proj != null)
+                objects.add(proj);
+        }
+
+        if (isPressed.getOrDefault(player.input.getSecondaryShoot(), false)) {
+            Projectile proj = player.fire(1);
+            if (proj != null)
+                objects.add(proj);
+        }
     }
 }

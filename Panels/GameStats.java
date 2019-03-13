@@ -30,7 +30,7 @@ public class GameStats extends JPanel {
         add(highScoreText);
 
         add(new JLabel(" "));
-        yourScoreText = new JLabel(" Current Leader: " + t.getCurrentLeader());
+        yourScoreText = new JLabel(" Current Leader: " + JavaArcade.getCurrentLeader());
 
         add(yourScoreText);
         Font displayFont = new Font("Monospaced", Font.BOLD, 16);
@@ -46,7 +46,7 @@ public class GameStats extends JPanel {
     }
 
     public void update() {
-        yourScoreText.setText(" Current Leader: " + game.getCurrentLeader());
+        yourScoreText.setText(" Current Leader: " + JavaArcade.getCurrentLeader());
         highScoreText.setText(" Current High Score: " + game.getHighScore());
     }
 }

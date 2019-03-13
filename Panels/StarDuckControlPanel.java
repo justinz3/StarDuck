@@ -129,23 +129,6 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
             return score + " points";
     }
 
-    public String getCurrentLeader() {
-        double currentMax = Integer.MIN_VALUE;
-        String currentLeader = "None";
-        for (int i = 0; i < GamePanel.playerScores.size(); i++) {
-            double score = GamePanel.playerScores.get(i);
-            if (score > currentMax) {
-                currentMax = score;
-                currentLeader = GamePanel.getColorByTeam(i);
-            }
-        }
-
-        if (currentMax == Integer.MIN_VALUE)
-            return "None";
-        else
-            return currentLeader + ": " + currentMax + " points";
-    }
-
     public void stopGame() {
         if (currentlyVisible == PanelType.GAME) {
             gamePanel.endGame();
@@ -154,7 +137,7 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     }
 
     public int getPoints() {
-        String[] scoreText = getCurrentLeader().split(": ");
+        String[] scoreText = JavaArcade.getCurrentLeader().split(": ");
         if(scoreText.length < 2)
             return 0;
         return Integer.parseInt(scoreText[1].split(" p")[0]);

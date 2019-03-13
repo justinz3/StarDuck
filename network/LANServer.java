@@ -1,9 +1,12 @@
 package network;
 
+import Player.KeyInputSet;
+
 import java.net.*;
 import java.io.*;
+import java.util.HashMap;
 
-public class LANServer implements LANFunctions {
+public class LANServer extends KeyBoardMapper implements LANFunctions  {
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private PrintWriter out;
@@ -38,5 +41,15 @@ public class LANServer implements LANFunctions {
         out.close();
         clientSocket.close();
         serverSocket.close();
+    }
+
+    @Override
+    public void sendKeyboardStatus(HashMap<Integer, Boolean> keyboardMap, KeyInputSet inputSet) throws Exception {
+        sendMessage(getKeyboardData(keyboardMap, inputSet));
+    }
+
+    @Override
+    public boolean[] getKeyboardStatus() throws Exception {
+        return interpretKeyboardData(receiveMessage());
     }
 }
