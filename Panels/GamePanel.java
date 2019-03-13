@@ -422,7 +422,6 @@ public class GamePanel extends JPanel {
                 try {
                     writer = new PrintWriter(highScore);
                     writer.println(playerScore);
-                    System.out.println(playerScore);
                     writer.close();
                 } catch (IOException e) {
                     e.printStackTrace();

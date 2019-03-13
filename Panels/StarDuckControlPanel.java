@@ -115,6 +115,7 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
             Scanner scanner;
             try {
                 scanner = new Scanner(highScore);
+
                 score = scanner.nextInt();
                 scanner.close();
             } catch (IOException e) {
