@@ -18,7 +18,7 @@ public class MainMenuPanel extends JPanel {
     private MouseAdapter clickAreaListener;
 
     private final int introDuration = 11000; // How long the introduction of the main menu is (how long to wait until displaying main-menu-loop.gif)
-    private boolean playIntro = true;
+    private boolean playIntro = false;
 
     private int time;
     private javax.swing.Timer timer;
