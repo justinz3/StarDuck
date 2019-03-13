@@ -157,4 +157,14 @@ public class StarDuckControlPanel extends JPanel implements JavaArcade {
     public void updateStats() {
         gameStats.update();
     }
+
+    public void managePause(boolean running) {
+        if(!running) {
+            controlPanel.disablePauseButton();
+            controlPanel.enableStartButton();
+        } else {
+            controlPanel.enablePauseButton();
+            controlPanel.disableStartButton();
+        }
+    }
 }

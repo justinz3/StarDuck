@@ -1,5 +1,6 @@
 package network;
 
+import Panels.GamePanel;
 import Player.KeyInputSet;
 
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class KeyBoardMapper {
         data += (forward.equals("0") ? getBitFromAction(keyboardMap, inputSet.getBackward()) : "0") + (left.equals("0") ? getBitFromAction(keyboardMap, inputSet.getRight()) : "0");
         data += getBitFromAction(keyboardMap, inputSet.getPrimaryShoot());
         data += getBitFromAction(keyboardMap, inputSet.getSecondaryShoot());
+        data += GamePanel.running ? "1" : "0";
 
         return data;
     }

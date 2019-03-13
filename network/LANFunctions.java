@@ -11,7 +11,7 @@ public interface LANFunctions {
 
     /**
      * Gets the current WASD state from the corresponding game
-     * @return An array of booleans in the following order: [W, A, S, D, Space, Shift]
+     * @return An array of booleans in the following order: [W, A, S, D, Space, Shift, game paused]
      * @throws Exception
      */
     boolean[] getKeyboardStatus() throws Exception;

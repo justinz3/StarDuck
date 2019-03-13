@@ -25,6 +25,7 @@ public class GamePanel extends JPanel {
     public static ArrayList<Interactable> toBeAdded;
     public static ArrayList<Drawable> toBeDrawn;
     public static ArrayList<Double> playerScores = new ArrayList<>();
+    public static boolean running;
 
     private Image backgroundImage;
     private int width, height;
@@ -39,7 +40,7 @@ public class GamePanel extends JPanel {
     public static final int refreshPeriod = 5; // milliseconds
 
     private MouseListener mouseListener;
-    private boolean running, serverReady = false;
+    private boolean serverReady = false;
     private LANRole gameRole;
     private LANServer server;
     private LANClient client;
@@ -237,6 +238,13 @@ public class GamePanel extends JPanel {
                         } else {
                             // Away team player
                             boolean[] keyboardStatus = gameRole == LANRole.HOST ? server.getKeyboardStatus() : client.getKeyboardStatus();
+                            running = keyboardStatus[6];
+
+                            if(!running) {
+                                controlPanel.managePause(running);
+                                continue;
+                            }
+
                             if (keyboardStatus[0])
                                 player.moveForward();
                             else if (keyboardStatus[2])
