@@ -202,6 +202,10 @@ public class GamePanel extends JPanel {
 
         public void actionPerformed(ActionEvent e) {
             try {
+                if(players.size() <= 1) {
+                    endGame();
+                }
+
                 int localTeam = gameRole == LANRole.HOST ? 0 : 1, awayTeam = 1 - localTeam;
                 if (gameType == StarDuckControlPanel.GameType.LAN) {
                     if(!serverReady)
@@ -369,10 +373,6 @@ public class GamePanel extends JPanel {
 
         JOptionPane.showMessageDialog(null, JavaArcade.getCurrentLeader(), "The Winner!", JOptionPane.PLAIN_MESSAGE);
 
-        controlPanel.showMenu();
-        running = false;
-
-        manageHighScores();
         updateScores();
 
         objects.clear();
@@ -380,8 +380,12 @@ public class GamePanel extends JPanel {
         toBeAdded.clear();
         toBeDrawn.clear();
         playerScores.clear();
+        timer.stop();
 
         manageHighScores();
+
+        controlPanel.showMenu();
+        running = false;
     }
 
     public class KeyboardListener implements KeyListener {
