@@ -25,6 +25,7 @@ public class GamePanel extends JPanel {
     public static ArrayList<Interactable> toBeAdded;
     public static ArrayList<Drawable> toBeDrawn;
     public static ArrayList<Double> playerScores = new ArrayList<>();
+    private static ArrayList<String> teamColor;
 
     private Image backgroundImage;
     private int width, height;
@@ -71,8 +72,14 @@ public class GamePanel extends JPanel {
         this.mouseListener = new ClickListener();
         addMouseListener(mouseListener);
 
+        if(teamColor != null) {
+            teamColor.clear();
+        }
+
         toBeAdded = new ArrayList<>();
         toBeDrawn = new ArrayList<>();
+        playerScores = new ArrayList<>();
+        teamColor = new ArrayList<>();
         objects = new ArrayList<>();
         players = new ArrayList<Player>();
         if (gameType == StarDuckControlPanel.GameType.LOCAL) {
@@ -158,6 +165,7 @@ public class GamePanel extends JPanel {
         players.add(player);
         objects.add(player.getShip());
         playerScores.add(0.0);
+        teamColor.add(player.getShip().getColor());
     }
 
     // ---------------------------------------------------------
@@ -374,7 +382,6 @@ public class GamePanel extends JPanel {
         playerScores.clear();
 
         manageHighScores();
-        updateScores();
     }
 
     public class KeyboardListener implements KeyListener {
@@ -395,8 +402,7 @@ public class GamePanel extends JPanel {
 
         @Override
         public void keyTyped(KeyEvent e) {
-            //System.out.println(e);
-            //System.out.println("Typed: " + e.getKeyCode());
+
         }
 
         @Override
@@ -408,20 +414,7 @@ public class GamePanel extends JPanel {
     private class ClickListener implements MouseListener {
 
         public void mouseClicked(MouseEvent e) {
-//            if (gameType == StarDuckControlPanel.GameType.LAN) {
-//                int x = e.getX();
-//                int y = e.getY();
-//
-//                int n = objects.size();
-//                for (int i = 0; i < n; i++) {
-//                    Drawable object = objects.get(i);
-//                    if (object instanceof Player) {
-//                        Player player = (Player) object;
-//                        Projectile proj = player.getShip().fire();
-//                        objects.add(proj);
-//                    }
-//                }
-//            }
+
         }
 
         public void mousePressed(MouseEvent e) {
@@ -502,6 +495,9 @@ public class GamePanel extends JPanel {
     }
 
     public static String getColorByTeam(int team) {
+        if(players.size() == 0) {
+            return teamColor.get(team);
+        }
         return players.get(team).getShipColor();
     }
 

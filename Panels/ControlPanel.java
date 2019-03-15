@@ -131,6 +131,10 @@ public class ControlPanel extends JPanel implements ActionListener {
     public void disableCreditsButton() {
         disable(creditsButton);
     }
+
+    public void updatePauseButton(boolean running) {
+        pauseButton.setText(running ? "Pause": "Resume");
+    }
 }
 
 
